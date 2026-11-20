@@ -1,5 +1,5 @@
 from tkinter import *
-
+import random
 
 # ==============================================================
 # 1. CONFIGURATION - Colors, Fonts, and Declaration
@@ -89,6 +89,47 @@ def select_difficulty(difficulty):
 
     # Navigate to the quiz screen
     switch_to_frame(frames["quiz"])
+    
+# ! -
+def generate_question():
+
+    # ! - Retrieve the selected difficulty
+    difficulty = app_data["selected_difficulty"]
+
+    # ! - Retrieve its number range
+    settings = DIFFICULTIES[difficulty]
+
+    minimum = settings["min_number"]
+    maximum = settings["max_number"]
+
+    # ! - Generate two random numbers
+    number1 = random.randint(minimum, maximum)
+    number2 = random.randint(minimum, maximum)
+
+    # ! - Randomly select an arithmetic operation
+    operation = random.choice(["+", "-", "*"])
+
+    # ! - Prevent negative answers in subtraction
+    if operation == "-" and number1 < number2:
+        number1, number2 = number2, number1
+
+    # ! - Calculate the correct answer
+    if operation == "+":
+        answer = number1 + number2
+
+    elif operation == "-":
+        answer = number1 - number2
+
+    elif operation == "*":
+        answer = number1 * number2
+
+    # Return the question information
+    return {
+        "number1": number1,
+        "number2": number2,
+        "operation": operation,
+        "answer": answer
+    }
 
 
 # =============================================================
@@ -416,7 +457,7 @@ def create_quiz_frame():
 
     widgets["answer_entry"] = Entry(
         answer_panel,
-        font=("Helvetica", 18),
+        font=("Arial", 18, "bold"),
         bg=COLORS["bg_entry"],
         fg=COLORS["fg_text"],
         insertbackground=COLORS["fg_text"],
@@ -433,9 +474,10 @@ def create_quiz_frame():
     widgets["submit_button"] = Button(
         answer_panel,
         text="SUBMIT ANSWER",
-        font=FONTS["body"],
+        font=FONTS["body_bold"],
         bg=COLORS["moderate"],
-        fg=COLORS["bg_color"],
+        fg=COLORS["fg_muted"],
+        disabledforeground=COLORS["bg_color"],
         relief="flat",
         state=DISABLED
     )
@@ -478,8 +520,7 @@ app_data = {
 
 # ! - Create both frames
 frames["home"] = create_home_frame()
-frames["second"] = create_second_frame()
-
+frames["quiz"] = create_quiz_frame()
 # Position both frames in the same location
 for frame in frames.values():
     frame.place(x=0, y=0, relwidth=1, relheight=1)
