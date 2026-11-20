@@ -330,6 +330,30 @@ def update_progress():
         text=f"{completed} / {total} questions completed"
     )
 
+def finish_quiz():
+
+    difficulty = app_data["selected_difficulty"]
+
+    total = DIFFICULTIES[difficulty]["question_count"]
+    score = app_data["score"]
+
+    maximum_score = total * 10
+
+    # Calculate the score percentage
+    percentage = (score / maximum_score) * 100
+
+    # Update the scoreboard
+    widgets["final_score_label"].config(
+        text=f"{score} / {maximum_score} POINTS"
+    )
+
+    widgets["final_summary_label"].config(
+        text=f"You completed {total} questions! "
+             f"Your final score is {percentage:.1f}%."
+    )
+
+    # Display results
+    switch_to_frame(frames["results"])
 
 # =============================================================
 # 3. FRAME FORMATTING AND CREATION
@@ -733,6 +757,69 @@ def create_quiz_frame():
     return frame
 
 
+def create_results_frame():
+
+    # Creates the final scoreboard.
+
+    frame = Frame(
+        root,
+        bg=COLORS["bg_color"]
+    )
+
+    panel = Frame(
+        frame,
+        bg=COLORS["bg_card"]
+    )
+    panel.pack(
+        padx=40,
+        pady=40,
+        fill="both",
+        expand=True
+    )
+
+    # Results heading
+    Label(
+        panel,
+        text="QUIZ COMPLETED!",
+        font=("Helvetica", 26, "bold"),
+        bg=COLORS["bg_card"],
+        fg=COLORS["moderate"]
+    ).pack(pady=(60, 20))
+
+    # Final score
+    widgets["final_score_label"] = Label(
+        panel,
+        text="0 / 100 POINTS",
+        font=("Helvetica", 30, "bold"),
+        bg=COLORS["bg_card"],
+        fg=COLORS["easy"]
+    )
+    widgets["final_score_label"].pack(pady=15)
+
+    # Performance summary
+    widgets["final_summary_label"] = Label(
+        panel,
+        text="You completed the quiz!",
+        font=FONTS["body"],
+        bg=COLORS["bg_card"],
+        fg=COLORS["fg_muted"]
+    )
+    widgets["final_summary_label"].pack(pady=10)
+
+    # Return to home screen
+    Button(
+        panel,
+        text="RETURN TO HOME",
+        font=FONTS["body"],
+        bg=COLORS["moderate"],
+        fg=COLORS["bg_color"],
+        relief="flat",
+        command=lambda: switch_to_frame(frames["home"])
+    ).pack(pady=30)
+
+    return frame
+
+
 # =============================================================
 # 4. APPLICATION SETUP
 # =============================================================
@@ -764,9 +851,9 @@ app_data = {
     "current_question_data": 0
 }
 
-# ! - Build and stack both screens in the same window for frame switching.
 frames["home"] = create_home_frame()
 frames["quiz"] = create_quiz_frame()
+frames["results"] = create_results_frame()
 # Position both frames in the same location
 for frame in frames.values():
     frame.place(x=0, y=0, relwidth=1, relheight=1)
