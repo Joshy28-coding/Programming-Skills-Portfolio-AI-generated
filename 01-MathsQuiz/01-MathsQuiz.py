@@ -32,6 +32,7 @@ FONTS = {
     "body_bold": ("Helvetica", 12, "bold"),
 }
 
+# ! - Difficulty library eases the use of using loops instead of repeatedly writing the same code.
 DIFFICULTIES = {
     "easy": {
         "number_label": "Single-Digit Numbers",
@@ -51,9 +52,9 @@ DIFFICULTIES = {
         "number_label": "4-Digit Numbers",
         "min_number": 1000,
         "max_number": 9999,
-        "question_count": 15,
+        "question_count": 10,
         "description": "High complexity mental computation",
-        },
+    },
 }
 
 WINDOW_SIZE = "800x800"
@@ -83,11 +84,10 @@ def select_difficulty(difficulty):
 # 3. FRAME FORMATTING AND CREATION
 # =============================================================
 
-def create_difficulty_card(parent, title, subtitle, description, color, difficulty):
+def create_difficulty_card(parent, difficulty, details):
     # ! - Creates reusable difficulty card.
     # ! - Uses a specialized components that would easily create the 3 difficulty cards needed for the quiz homescreen.
     # ! - Below are the declarations of various variables and attributes that create the key components such as difficulty descriptions, colors, etc.
-    details = DIFFICULTIES[difficulty]
     title = difficulty.title()
     color = COLORS[difficulty]
     
@@ -206,7 +206,7 @@ def create_home_frame():
     # ! - Greetings Description and challenge introduction.
     Label(
         panel,
-        text="Choose your challenge tier. Each test round comprises 10 questions.\n"
+        text="Choose your challenge tier. Each tier has 10 questions each.\n"
              "Earn 10 points on your first attempt, or 5 points on your second.",
         font=FONTS["body"],
         bg=COLORS["bg_card"],
@@ -225,35 +225,9 @@ def create_home_frame():
         pady=35
     )
     
-    # ! - Create the three difficulty cards
-    # ! - These three difficulty cards call from cards_container frame, it's been specially formatted to be used
-    # ! - as a template so all that is needed is the expected Content for the variables.
-    create_difficulty_card(
-        cards_container,
-        "Easy",
-        "Single-Digit Numbers (1 – 9)",
-        "Ideal for warming up and mental agility",
-        COLORS["easy"],
-        "easy"
-    )
-
-    create_difficulty_card(
-        cards_container,
-        "Moderate",
-        "Double-Digit Numbers (10 – 99)",
-        "Standard challenge testing speed and accuracy",
-        COLORS["moderate"],
-        "moderate"
-    )
-
-    create_difficulty_card(
-        cards_container,
-        "Advanced",
-        "4-Digit Numbers (1000 – 9999)",
-        "High complexity mental computation",
-        COLORS["advanced"],
-        "advanced"
-    )
+    # ! - Further optimized code instead of calling all different items repeatedly, the card builder receives and loops the settings dictionary directly.
+    for difficulty, details in DIFFICULTIES.items():
+        create_difficulty_card(cards_container, difficulty, details)
 
     return frame
 
