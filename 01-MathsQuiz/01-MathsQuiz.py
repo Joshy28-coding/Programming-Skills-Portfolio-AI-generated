@@ -55,67 +55,7 @@ def create_home_frame():
 
     frame = Frame(root, bg=COLORS["bg_color"])
 
-    Label(
-        frame,
-        text="Working with multiple frames",
-        font=FONTS["title"],
-        bg=COLORS["bg_color"],
-        fg=COLORS["fg_text"]
-    ).pack(pady=15)
-
-    Label(
-        frame,
-        text="This is Frame 1",
-        font=FONTS["body"],
-        bg=COLORS["bg_color"],
-        fg=COLORS["fg_muted"]
-    ).pack(pady=5)
-
-    Label(
-        frame,
-        text="Enter Name",
-        font=FONTS["body"],
-        bg=COLORS["bg_color"],
-        fg=COLORS["fg_text"]
-    ).pack(pady=5)
-
-    widgets["name_entry"] = Entry(
-        frame,
-        font=FONTS["body"],
-        bg=COLORS["bg_entry"],
-        fg=COLORS["fg_text"],
-        insertbackground=COLORS["fg_text"]
-    )
-    widgets["name_entry"].pack(pady=5)
-
-    widgets["greeting_label"] = Label(
-        frame,
-        text="",
-        font=FONTS["body"],
-        bg=COLORS["bg_color"],
-        fg=COLORS["fg_text"]
-    )
-    widgets["greeting_label"].pack(pady=10)
-
-    Button(
-        frame,
-        text="Show Greeting",
-        font=FONTS["body"],
-        command=display_greeting,
-        bg=COLORS["bg_color"],
-        fg=COLORS["fg_text"]
-    ).pack(pady=5)
-
-    Button(
-        frame,
-        text="Switch to frame 2",
-        font=FONTS["body"],
-        command=lambda: switch_to_frame(frames["second"]),
-        bg=COLORS["bg_color"],
-        fg=COLORS["fg_text"]
-    ).pack(pady=5)
-
-    return frame
+# ! - Deleting old code and preperation for appropriate home screen, difficulty selector, and content.
 
 
 def create_second_frame():
@@ -157,6 +97,7 @@ root.config(bg=COLORS["bg_color"],)
 # ! - dictionaries
 frames = {}
 widgets = {}
+# ! - Widgets help me store individual interface components like greeting labels or name entries.
 
 # ! - Create both frames
 # Create both frames
