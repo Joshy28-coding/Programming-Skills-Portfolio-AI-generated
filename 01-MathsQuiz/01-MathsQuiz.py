@@ -29,7 +29,7 @@ FONTS = {
     "heading": ("Helvetica", 14),
     "body": ("Helvetica", 12),
 }
-# Testing my first GitHub connection!
+# ! - Testing my first GitHub connection!
 WINDOW_SIZE = "800x800"
 
 # ==============================================================
@@ -61,17 +61,18 @@ def display_greeting():
 # =============================================================
 # 3. FRAME FORMATTING AND CREATION
 # =============================================================
-def create_difficulty_card(parent, title, subtitle, description, color, difficulty):
-    # Creates one reusable difficulty card.
 
-    # Main card container
+def create_difficulty_card(parent, title, subtitle, description, color, difficulty):
+    # ! - Creates one reusable difficulty card.
+
+    # ! - Main card container
     card = Frame(
         parent,
         bg=COLORS["bg_card_inner"]
     )
     card.pack(fill="x", pady=9)
 
-    # Coloured vertical accent on the left
+    # ! - Coloured vertical accent on the left
     accent = Frame(
         card,
         bg=color,
@@ -79,7 +80,60 @@ def create_difficulty_card(parent, title, subtitle, description, color, difficul
     )
     accent.pack(side=LEFT, fill="y")
     
+    # ! - Container for the card's text
+    content = Frame(
+        card,
+        bg=COLORS["bg_card_inner"]
+    )
+    content.pack(
+        side=LEFT,
+        fill="both",
+        expand=True,
+        padx=16,
+        pady=12
+    )
     
+    # ! - Difficulty heading
+    Label(
+        content,
+        text=title,
+        font=FONTS["heading"],
+        bg=COLORS["bg_card_inner"],
+        fg=color
+    ).pack(anchor="W")
+    
+    # ! - Difficulty subtitle
+    Label(
+        content,
+        text=subtitle,
+        font=FONTS["body"],
+        bg=COLORS["bg_card_inner"],
+        fg=COLORS["fg_text"]
+    ).pack(anchor="w", pady=3)
+    
+    # ! - Difficulty desription
+    Label(
+        content,
+        text=description,
+        font=("Helvetica", 10),
+        bg=COLORS["bg_card_inner"],
+        fg=COLORS["fg_muted"]
+    ).pack(anchor="w")
+    
+    Button(
+        card,
+        text=f"Start, {title.title()} →",
+        font=FONTS["body"],
+        bg=color,
+        fg="#0B0F19",
+        relief="flat",
+        padx=15,
+        pady=10,
+        command=lambda: select_difficulty(difficulty)
+    ).pack(side=RIGHT,padx=16, pady=15)
+    
+    return card
+
 def create_home_frame():
     # ! - Create the first screen of the application.
     # ! - Difficulty selection screen.
