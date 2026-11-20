@@ -57,6 +57,33 @@ DIFFICULTIES = {
     },
 }
 
+RANKINGS = {
+    "A+": {
+        "minimum": 91,
+        "description": "Outstanding performance!"
+    },
+    "A": {
+        "minimum": 81,
+        "description": "Excellent performance!"
+    },
+    "B": {
+        "minimum": 71,
+        "description": "Very good performance!"
+    },
+    "C": {
+        "minimum": 61,
+        "description": "Good performance!"
+    },
+    "D": {
+        "minimum": 51,
+        "description": "Satisfactory performance!"
+    },
+    "F": {
+        "minimum": 0,
+        "description": "Keep practising!"
+    }
+}
+
 WINDOW_SIZE = "800x800"
 
 # ==============================================================
@@ -329,6 +356,14 @@ def update_progress():
     widgets["progress_label"].config(
         text=f"{completed} / {total} questions completed"
     )
+    
+def calculate_rank(score):
+
+    # Check each ranking category
+    for rank, details in RANKINGS.items():
+
+        if score >= details["minimum"]:
+            return rank, details["description"]
 
 def finish_quiz():
 
@@ -351,6 +386,16 @@ def finish_quiz():
         text=f"You completed {total} questions! "
              f"Your final score is {percentage:.1f}%."
     )
+    
+    widgets["final_rank_label"].config(
+    text=rank
+    )
+
+    widgets["rank_description_label"].config(
+        text=description
+    )
+    # Calculate the student's rank
+    rank, description = calculate_rank(score)
 
     # Display results
     switch_to_frame(frames["results"])
@@ -805,6 +850,24 @@ def create_results_frame():
         fg=COLORS["fg_muted"]
     )
     widgets["final_summary_label"].pack(pady=10)
+    
+    widgets["final_rank_label"] = Label(
+    panel,
+    text="",
+    font=("Helvetica", 32, "bold"),
+    bg=COLORS["bg_card"],
+    fg=COLORS["moderate"]
+    )
+    widgets["final_rank_label"].pack(pady=10)
+
+    widgets["rank_description_label"] = Label(
+    panel,
+    text="",
+    font=FONTS["body"],
+    bg=COLORS["bg_card"],
+    fg=COLORS["fg_muted"]
+)
+    widgets["rank_description_label"].pack(pady=5)
 
     # Return to home screen
     Button(
