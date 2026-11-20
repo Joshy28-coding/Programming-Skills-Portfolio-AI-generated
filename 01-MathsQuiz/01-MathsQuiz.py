@@ -57,13 +57,27 @@ def display_greeting():
             fg=COLORS["error"]
         )
 
+def select_difficulty(difficulty):
+
+    # Store the selected difficulty
+    app_data["selected_difficulty"] = difficulty
+
+    # Update the next screen
+    widgets["selected_difficulty_label"].config(
+        text=f"Selected Difficulty: {difficulty.title()}"
+    )
+
+    # Navigate to the next frame
+    switch_to_frame(frames["second"])
+
 
 # =============================================================
 # 3. FRAME FORMATTING AND CREATION
 # =============================================================
 
 def create_difficulty_card(parent, title, subtitle, description, color, difficulty):
-    # ! - Creates one reusable difficulty card.
+    # ! - Creates reusable difficulty card.
+    # ! - Uses a specialized format that would easily create the 3 difficulty cards needed for the quiz.
 
     # ! - Main card container
     card = Frame(
@@ -195,7 +209,9 @@ def create_home_frame():
         pady=35
     )
     
-    # Create the three difficulty cards
+    # ! - Create the three difficulty cards
+    # ! - These three difficulty cards call from cards_container frame, it's been specially formatted to be used
+    # ! - as a template so all that is needed is the expected Content for the variables.
     create_difficulty_card(
         cards_container,
         "Easy",
@@ -225,33 +241,21 @@ def create_home_frame():
 
     return frame
 
-# ! - Deleting old code and preperation for appropriate home screen, difficulty selector, and content.
-
 
 def create_second_frame():
     # ! - Create the second screen of the application.
-
-    frame = Frame(root, bg=COLORS["bg_color"])
-
-    Label(
-        frame,
-        text="This is Frame 2",
-        font=("Roboto", 16),
-        bg=COLORS["bg_color"],
-        fg=COLORS["fg_text"]
-    ).pack(pady=5)
-
-    Button(
-        frame,
-        text="Switch to Frame 1",
-        font=FONTS["body"],
-        command=lambda: switch_to_frame(frames["home"]),
-        bg=COLORS["bg_color"],
-        fg=COLORS["fg_text"]
-    ).pack(pady=5)
+    # ! - Deleted contents to make way for appropriate difficulty test.
+    
+    widgets["selected_difficulty_label"] = Label(
+    frame,
+    text="",
+    font=FONTS["heading"],
+    bg=COLORS["bg_color"],
+    fg=COLORS["fg_text"]
+)
+    widgets["selected_difficulty_label"].pack(pady=15)
 
     return frame
-
 
 # =============================================================
 # 4. APPLICATION SETUP
@@ -267,7 +271,14 @@ root.config(bg=COLORS["bg_color"],)
 # ! - dictionaries
 frames = {}
 widgets = {}
+# ! - Stores individual widgets so functions can access
+# ! - and update them without recreating the interface.
 # ! - Widgets help me store individual interface components like greeting labels or name entries.
+
+app_data = {
+    "selected_difficulty": None,
+}
+
 
 # ! - Create both frames
 # Create both frames
