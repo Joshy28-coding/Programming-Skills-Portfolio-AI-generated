@@ -68,16 +68,27 @@ def switch_to_frame(frame):
 
 def select_difficulty(difficulty):
 
-    # Helps store information such as selected difficulty.
+    # Store the selected difficulty
     app_data["selected_difficulty"] = difficulty
 
-    # Update the next screen
-    widgets["selected_difficulty_label"].config(
-        text=f"Selected Difficulty: {difficulty.title()}"
+    # Retrieve the selected difficulty settings
+    settings = DIFFICULTIES[difficulty]
+
+    # Update the quiz screen information
+    widgets["quiz_difficulty_label"].config(
+        text=difficulty.upper()
     )
 
-    # Navigate to the next frame
-    switch_to_frame(frames["second"])
+    widgets["question_count_label"].config(
+        text=f"01 / {settings['question_count']}"
+    )
+
+    widgets["score_label"].config(
+        text="0 pts"
+    )
+
+    # Navigate to the quiz screen
+    switch_to_frame(frames["quiz"])
 
 
 # =============================================================
@@ -164,6 +175,9 @@ def create_difficulty_card(parent, difficulty, details):
     
     return card
 
+# =============================================================
+# 3.1 HOMESCREEN FRAME !
+# =============================================================
 def create_home_frame():
     # ! - Create the first screen of the application.
     # ! - Difficulty selection screen.
@@ -231,25 +245,208 @@ def create_home_frame():
 
     return frame
 
+# =============================================================
+# 3.2 MAINQUIZ FRAME !
+# =============================================================
+def create_quiz_frame():
+    # Creates the main quiz interface.
 
-def create_second_frame():
-    # ! - Create the second screen of the application.
-    # ! - Deleted contents to make way for appropriate difficulty test.
     frame = Frame(
         root,
         bg=COLORS["bg_color"]
     )
-    
-    widgets["selected_difficulty_label"] = Label(
-    frame,
-    text="",
-    font=FONTS["heading"],
-    bg=COLORS["bg_color"],
-    fg=COLORS["fg_text"]
+
+    # Main content panel
+    panel = Frame(
+        frame,
+        bg=COLORS["bg_card"]
     )
-    widgets["selected_difficulty_label"].pack(pady=15)
+    panel.pack(
+        padx=40,
+        pady=40,
+        fill="both",
+        expand=True
+    )
+
+    # ------------------------------------------
+    # HEADER
+    # ------------------------------------------
+
+    header = Frame(
+        panel,
+        bg=COLORS["bg_card"]
+    )
+    header.pack(
+        fill="x",
+        padx=30,
+        pady=25
+    )
+
+    Label(
+        header,
+        text="MATHQUIZ",
+        font=FONTS["heading"],
+        bg=COLORS["bg_card"],
+        fg=COLORS["moderate"]
+    ).pack(side=LEFT)
+
+    widgets["quiz_difficulty_label"] = Label(
+        header,
+        text="",
+        font=FONTS["body"],
+        bg=COLORS["bg_card"],
+        fg=COLORS["fg_muted"]
+    )
+    widgets["quiz_difficulty_label"].pack(side=RIGHT)
+
+    # ------------------------------------------
+    # SCORE AND QUESTION COUNTER
+    # ------------------------------------------
+
+    info_container = Frame(
+        panel,
+        bg=COLORS["bg_card"]
+    )
+    info_container.pack(
+        fill="x",
+        padx=30,
+        pady=15
+    )
+
+    # Question counter
+    question_section = Frame(
+        info_container,
+        bg=COLORS["bg_card"]
+    )
+    question_section.pack(side=LEFT)
+
+    Label(
+        question_section,
+        text="QUESTION",
+        font=FONTS["body"],
+        bg=COLORS["bg_card"],
+        fg=COLORS["fg_muted"]
+    ).pack(anchor="w")
+
+    widgets["question_count_label"] = Label(
+        question_section,
+        text="01 / 10",
+        font=("Helvetica", 22, "bold"),
+        bg=COLORS["bg_card"],
+        fg=COLORS["fg_text"]
+    )
+    widgets["question_count_label"].pack(anchor="w")
+
+    # Score display
+    score_section = Frame(
+        info_container,
+        bg=COLORS["bg_card"]
+    )
+    score_section.pack(side=RIGHT)
+
+    Label(
+        score_section,
+        text="YOUR SCORE",
+        font=FONTS["body"],
+        bg=COLORS["bg_card"],
+        fg=COLORS["fg_muted"]
+    ).pack(anchor="e")
+
+    widgets["score_label"] = Label(
+        score_section,
+        text="0 pts",
+        font=("Helvetica", 22, "bold"),
+        bg=COLORS["bg_card"],
+        fg=COLORS["easy"]
+    )
+    widgets["score_label"].pack(anchor="e")
+
+    # ------------------------------------------
+    # QUESTION DISPLAY
+    # ------------------------------------------
+
+    question_panel = Frame(
+        panel,
+        bg=COLORS["bg_card_inner"]
+    )
+    question_panel.pack(
+        fill="x",
+        padx=30,
+        pady=25
+    )
+
+    Label(
+        question_panel,
+        text="SOLVE THE FOLLOWING",
+        font=FONTS["body"],
+        bg=COLORS["bg_card_inner"],
+        fg=COLORS["fg_muted"]
+    ).pack(pady=(25, 10))
+
+    widgets["question_label"] = Label(
+        question_panel,
+        text="Your question will appear here.",
+        font=("Helvetica", 26, "bold"),
+        bg=COLORS["bg_card_inner"],
+        fg=COLORS["fg_text"]
+    )
+    widgets["question_label"].pack(pady=(5, 25))
+
+    # ------------------------------------------
+    # ANSWER INPUT
+    # ------------------------------------------
+
+    answer_panel = Frame(
+        panel,
+        bg=COLORS["bg_card_inner"]
+    )
+    answer_panel.pack(
+        fill="x",
+        padx=30,
+        pady=10
+    )
+
+    Label(
+        answer_panel,
+        text="YOUR ANSWER",
+        font=FONTS["body"],
+        bg=COLORS["bg_card_inner"],
+        fg=COLORS["fg_muted"]
+    ).pack(anchor="w", padx=15, pady=(15, 5))
+
+    widgets["answer_entry"] = Entry(
+        answer_panel,
+        font=("Helvetica", 18),
+        bg=COLORS["bg_entry"],
+        fg=COLORS["fg_text"],
+        insertbackground=COLORS["fg_text"],
+        justify="center"
+    )
+    widgets["answer_entry"].pack(
+        fill="x",
+        padx=15,
+        pady=(5, 15),
+        ipady=8
+    )
+
+    # Submit button will be connected in our next lesson.
+    widgets["submit_button"] = Button(
+        answer_panel,
+        text="SUBMIT ANSWER",
+        font=FONTS["body"],
+        bg=COLORS["moderate"],
+        fg=COLORS["bg_color"],
+        relief="flat",
+        state=DISABLED
+    )
+    widgets["submit_button"].pack(
+        fill="x",
+        padx=15,
+        pady=(0, 15)
+    )
 
     return frame
+
 
 # =============================================================
 # 4. APPLICATION SETUP
@@ -269,8 +466,14 @@ widgets = {}
 # ! - and update them without recreating the interface.
 # ! - Widgets help me store individual interface components like greeting labels or name entries.
 
+
+# ! - Helps store information such as selected difficulty.
+# ! - Unlike widgets that is currently storing interface components, app_data helps store application information.
 app_data = {
     "selected_difficulty": None,
+    "score": 0,
+    "current_question": 1,
+    "current_attempt": 1
 }
 
 # ! - Create both frames
