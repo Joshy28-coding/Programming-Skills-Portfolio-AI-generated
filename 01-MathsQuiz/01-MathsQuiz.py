@@ -54,13 +54,32 @@ def display_greeting():
     else:
         widgets["greeting_label"].config(
             text="Please enter your name.",
-            fg="#F87171"
+            fg=COLORS["error"]
         )
 
 
 # =============================================================
 # 3. FRAME FORMATTING AND CREATION
 # =============================================================
+def create_difficulty_card(parent, title, subtitle, description, color, difficulty):
+    # Creates one reusable difficulty card.
+
+    # Main card container
+    card = Frame(
+        parent,
+        bg=COLORS["bg_card_inner"]
+    )
+    card.pack(fill="x", pady=9)
+
+    # Coloured vertical accent on the left
+    accent = Frame(
+        card,
+        bg=color,
+        width=5
+    )
+    accent.pack(side=LEFT, fill="y")
+    
+    
 def create_home_frame():
     # ! - Create the first screen of the application.
     # ! - Difficulty selection screen.
@@ -82,7 +101,7 @@ def create_home_frame():
         expand="true"
     )
     
-        # Small application heading
+    # Small application heading
     Label(
         panel,
         text="- ARITHMETIC MATH QUIZ! -",
@@ -91,7 +110,7 @@ def create_home_frame():
         fg=COLORS["moderate"]
     ).pack(pady=(40, 10))
     
-        # Main title
+    # Main title
     Label(
         panel,
         text="Select Difficulty Level",
@@ -100,6 +119,56 @@ def create_home_frame():
         fg=COLORS["fg_text"]
     ).pack()
     
+    # ! - Greetings Description and challenge introduction.
+    Label(
+        panel,
+        text="Choose your challenge tier. Each test round comprises 10 questions.\n"
+             "Earn 10 points on your first attempt, or 5 points on your second.",
+        font=FONTS["body"],
+        bg=COLORS["bg_card"],
+        fg=COLORS["fg_muted"],
+        justify="center"
+    ).pack(pady=12)   
+
+    # Container for the difficulty cards
+    cards_container = Frame(
+        panel,
+        bg=COLORS["bg_card"]
+    )
+    cards_container.pack(
+        fill="x",
+        padx=35,
+        pady=35
+    )
+    
+    # Create the three difficulty cards
+    create_difficulty_card(
+        cards_container,
+        "Easy",
+        "Single-Digit Numbers (1 – 9)",
+        "Ideal for warming up and mental agility",
+        COLORS["easy"],
+        "easy"
+    )
+
+    create_difficulty_card(
+        cards_container,
+        "Moderate",
+        "Double-Digit Numbers (10 – 99)",
+        "Standard challenge testing speed and accuracy",
+        COLORS["moderate"],
+        "moderate"
+    )
+
+    create_difficulty_card(
+        cards_container,
+        "Advanced",
+        "4-Digit Numbers (1000 – 9999)",
+        "High complexity mental computation",
+        COLORS["advanced"],
+        "advanced"
+    )
+
     return frame
 
 # ! - Deleting old code and preperation for appropriate home screen, difficulty selector, and content.
