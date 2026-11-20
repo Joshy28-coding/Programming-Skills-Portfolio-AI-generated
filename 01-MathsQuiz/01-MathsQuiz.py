@@ -5,12 +5,23 @@ from tkinter import *
 # ==============================================================
 
 COLORS = {
+    # ! - Background Colors
     "bg_color": "#0B0F19",  # Background color
     "bg_card": "#111827",  # Card Container
     "bg_card_inner": "#1F2937",  # Inner Card Container
     "bg_entry": "#0F172A",  # Dark Entry Card
+    
+    # ! - Text Colors
     "fg_text": "#F9FAFB",  # White Text
     "fg_muted": "#9CA3AF",  # Muted Grey Text
+    
+    # ! - Difficulty Colors
+    "easy": "#10B981",
+    "moderate": "#00D9F5",
+    "advanced": "#8B5CF6",
+    
+    # ! - Feedback Colors
+    "error" : "#F87171"
 }
 
 FONTS = {
@@ -52,8 +63,44 @@ def display_greeting():
 # =============================================================
 def create_home_frame():
     # ! - Create the first screen of the application.
+    # ! - Difficulty selection screen.
 
-    frame = Frame(root, bg=COLORS["bg_color"])
+    frame = Frame(
+        root,
+        bg=COLORS["bg_color"]
+    )
+    
+    # Main content panel
+    panel = Frame(
+        frame,
+        bg=COLORS["bg_card"]
+    )
+    panel.pack(
+        padx=40,
+        pady=40,
+        fill="both",
+        expand="true"
+    )
+    
+        # Small application heading
+    Label(
+        panel,
+        text="- ARITHMETIC MATH QUIZ! -",
+        font=("Helvetica", 10, "bold"),
+        bg=COLORS["bg_card"],
+        fg=COLORS["moderate"]
+    ).pack(pady=(40, 10))
+    
+        # Main title
+    Label(
+        panel,
+        text="Select Difficulty Level",
+        font=("Helvetica", 26, "bold"),
+        bg=COLORS["bg_card"],
+        fg=COLORS["fg_text"]
+    ).pack()
+    
+    return frame
 
 # ! - Deleting old code and preperation for appropriate home screen, difficulty selector, and content.
 
