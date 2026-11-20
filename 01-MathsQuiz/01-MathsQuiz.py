@@ -70,6 +70,12 @@ def select_difficulty(difficulty):
 
     # Store the selected difficulty
     app_data["selected_difficulty"] = difficulty
+    
+    # Reset quiz information for a new round
+    app_data["score"] = 0
+    app_data["current_question"] = 1
+    app_data["current_attempt"] = 1
+    app_data["completed_questions"] = 0
 
     # Retrieve the selected difficulty settings
     settings = DIFFICULTIES[difficulty]
@@ -87,8 +93,21 @@ def select_difficulty(difficulty):
         text="0 pts"
     )
 
+    # Generate and display the first question
+    display_question()
+
+    # Reset progress bar
+    update_progress()
+    
+    # Navigate to the quiz screen
     # Navigate to the quiz screen
     switch_to_frame(frames["quiz"])
+
+    # Allow Tkinter to calculate the new screen dimensions
+    root.update_idletasks()
+
+    # Reset progress bar
+    update_progress()
     
 # ! -
 def generate_question():
@@ -153,7 +172,37 @@ def display_question():
 
     # Clear the previous answer
     widgets["answer_entry"].delete(0, END)
+    
 
+def update_progress():
+
+    # Retrieve completed and total questions
+    completed = app_data["completed_questions"]
+
+    difficulty = app_data["selected_difficulty"]
+    total = DIFFICULTIES[difficulty]["question_count"]
+
+    # Calculate completion percentage
+    percentage = completed / total
+
+    # Retrieve the Canvas dimensions
+    canvas = widgets["progress_canvas"]
+    canvas_width = canvas.winfo_width()
+
+    # Calculate how wide the progress fill should be
+    fill_width = canvas_width * percentage
+
+    # Update the rectangle
+    canvas.coords(
+        widgets["progress_fill"],
+        0, 0,
+        fill_width, 9
+    )
+
+    # Update the progress text
+    widgets["progress_label"].config(
+        text=f"{completed} / {total} questions completed"
+    )
 
 
 # =============================================================
@@ -579,7 +628,11 @@ app_data = {
     "selected_difficulty": None,
     "score": 0,
     "current_question": 1,
-    "current_attempt": 1
+    "current_attempt": 1,
+    "completed_questions": 0,
+    
+    #Stores the currently generated question
+    "current_question_data": 0
 }
 
 # ! - Create both frames
