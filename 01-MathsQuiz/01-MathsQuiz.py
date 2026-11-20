@@ -29,16 +29,45 @@ FONTS = {
     "title": ("Helvetica", 16),
     "heading": ("Helvetica", 14),
     "body": ("Helvetica", 12),
+    "body_bold": ("Helvetica", 12, "bold"),
 }
+
+DIFFICULTIES = {
+    "easy": {
+        "number_label": "Single-Digit Numbers",
+        "min_number": 1,
+        "max_number": 9,
+        "question_count": 10,
+        "description": "Ideal for warming up and mental agility",
+    },
+    "moderate": {
+        "number_label": "Double-Digit Numbers",
+        "min_number": 10,
+        "max_number": 99,
+        "question_count": 10,
+        "description": "Standard challenge testing speed and accuracy",
+    },
+    "advanced": {
+        "number_label": "4-Digit Numbers",
+        "min_number": 1000,
+        "max_number": 9999,
+        "question_count": 15,
+        "description": "High complexity mental computation",
+        },
+}
+
 WINDOW_SIZE = "800x800"
 
 # ==============================================================
 # 2. FUNCTIONS
 # ==============================================================
+def switch_to_frame(frame):
+    # ! - Bring the selected frame to the front.
+    frame.tkraise()
 
 def select_difficulty(difficulty):
 
-    # Stores the selected difficulty
+    # Helps store information such as selected difficulty.
     app_data["selected_difficulty"] = difficulty
 
     # Update the next screen
@@ -56,8 +85,12 @@ def select_difficulty(difficulty):
 
 def create_difficulty_card(parent, title, subtitle, description, color, difficulty):
     # ! - Creates reusable difficulty card.
-    # ! - Uses a specialized components that would easily create the 3 difficulty cards needed for the quiz.
-
+    # ! - Uses a specialized components that would easily create the 3 difficulty cards needed for the quiz homescreen.
+    # ! - Below are the declarations of various variables and attributes that create the key components such as difficulty descriptions, colors, etc.
+    details = DIFFICULTIES[difficulty]
+    title = difficulty.title()
+    color = COLORS[difficulty]
+    
     # ! - Main card container
     card = Frame(
         parent,
@@ -98,7 +131,11 @@ def create_difficulty_card(parent, title, subtitle, description, color, difficul
     # ! - Difficulty subtitle
     Label(
         content,
-        text=subtitle,
+        text=(
+            f"{details['number_label']} "
+            f"({details['min_number']} – {details['max_number']}) · "
+            f"{details['question_count']} questions"
+        ),
         font=FONTS["body"],
         bg=COLORS["bg_card_inner"],
         fg=COLORS["fg_text"]
@@ -107,7 +144,7 @@ def create_difficulty_card(parent, title, subtitle, description, color, difficul
     # ! - Difficulty desription
     Label(
         content,
-        text=description,
+        text=details["description"],
         font=("Helvetica", 10),
         bg=COLORS["bg_card_inner"],
         fg=COLORS["fg_muted"]
@@ -115,8 +152,8 @@ def create_difficulty_card(parent, title, subtitle, description, color, difficul
     
     Button(
         card,
-        text=f"Start, {title.title()} →",
-        font=FONTS["body"],
+        text=f"Start {title.title()} →",
+        font=FONTS["body_bold"],
         bg=color,
         fg="#0B0F19",
         relief="flat",
@@ -152,7 +189,7 @@ def create_home_frame():
     Label(
         panel,
         text="- ARITHMETIC MATH QUIZ! -",
-        font=("Helvetica", 10, "bold"),
+        font=FONTS["body_bold"],
         bg=COLORS["bg_card"],
         fg=COLORS["moderate"]
     ).pack(pady=(40, 10))
