@@ -62,25 +62,25 @@ WINDOW_SIZE = "800x800"
 # ==============================================================
 # 2. FUNCTIONS
 # ==============================================================
+
 def switch_to_frame(frame):
     # ! - Bring the selected frame to the front.
     frame.tkraise()
 
 def select_difficulty(difficulty):
 
-    # Store the selected difficulty
+    # ! - Save the chosen tier and reset state so each round starts fresh.
     app_data["selected_difficulty"] = difficulty
     
-    # Reset quiz information for a new round
     app_data["score"] = 0
     app_data["current_question"] = 1
     app_data["current_attempt"] = 1
     app_data["completed_questions"] = 0
 
-    # Retrieve the selected difficulty settings
+    # ! - Read this tier's settings to update its question counter.
     settings = DIFFICULTIES[difficulty]
 
-    # Update the quiz screen information
+    # ! - Refresh the quiz header and score for the selected tier.
     widgets["quiz_difficulty_label"].config(
         text=difficulty.upper()
     )
@@ -93,26 +93,21 @@ def select_difficulty(difficulty):
         text="0 pts"
     )
 
-    # Generate and display the first question
+    # ! - Prepare the first question before showing the quiz screen.
     display_question()
 
     # Reset progress bar
     update_progress()
     
-    # Navigate to the quiz screen
-    # Navigate to the quiz screen
+    # ! - Show the quiz screen, then refresh progress after layout dimensions are available.
     switch_to_frame(frames["quiz"])
-
-    # Allow Tkinter to calculate the new screen dimensions
     root.update_idletasks()
-
-    # Reset progress bar
     update_progress()
     
-# ! -
+# ! - Generate one arithmetic problem using the selected tier's number range.
 def generate_question():
 
-    # ! - Retrieve the selected difficulty
+    # ! - Use the selected tier to determine the range for both operands.
     difficulty = app_data["selected_difficulty"]
 
     # ! - Retrieve its number range
@@ -121,14 +116,14 @@ def generate_question():
     minimum = settings["min_number"]
     maximum = settings["max_number"]
 
-    # ! - Generate two random numbers
+    # ! - Pick operands and an operation for this problem.
     number1 = random.randint(minimum, maximum)
     number2 = random.randint(minimum, maximum)
 
-    # ! - Randomly select an arithmetic operation
-    operation = random.choice(["+", "-", "*"])
+    # ! - Randomly select addition or subtraction
+    operation = random.choice(["+", "-"])
 
-    # ! - Prevent negative answers in subtraction
+    # ! - Prevent negative subtraction answers
     if operation == "-" and number1 < number2:
         number1, number2 = number2, number1
 
@@ -136,11 +131,8 @@ def generate_question():
     if operation == "+":
         answer = number1 + number2
 
-    elif operation == "-":
+    else:
         answer = number1 - number2
-
-    elif operation == "*":
-        answer = number1 * number2
 
     # Return the question information
     return {
@@ -152,54 +144,188 @@ def generate_question():
     
 def display_question():
 
-    # Generate a new question
+    # ! - Generate a problem and retain its answer for later checking.
     question = generate_question()
 
     # Store the question for later answer validation
     app_data["current_question_data"] = question
 
-    # Format the question for the interface
+    # ! - Build the expression shown to the player.
     question_text = (
         f"{question['number1']} "
         f"{question['operation']} "
         f"{question['number2']} = ?"
     )
 
-    # Display the question
+    # ! - Show the new expression and clear any answer from the previous one.
     widgets["question_label"].config(
         text=question_text
     )
-
-    # Clear the previous answer
     widgets["answer_entry"].delete(0, END)
-    
+
+
+def submit_answer():
+
+    # Retrieve the student's input
+    user_input = widgets["answer_entry"].get().strip()
+
+    # Prevent empty submissions
+    if not user_input:
+        widgets["feedback_label"].config(
+            text="Please enter an answer.",
+            fg=COLORS["error"]
+        )
+        return
+
+    # Check that the input is a whole number
+    try:
+        user_answer = int(user_input)
+
+    except ValueError:
+        widgets["feedback_label"].config(
+            text="Please enter a valid whole number.",
+            fg=COLORS["error"]
+        )
+        return
+
+    # Retrieve the correct answer
+    question = app_data["current_question_data"]
+    correct_answer = question["answer"]
+
+    # Retrieve the current attempt
+    attempt = app_data["current_attempt"]
+
+    # Check whether the answer is correct
+    if user_answer == correct_answer:
+
+        # Award points based on the attempt
+        if attempt == 1:
+            app_data["score"] += 10
+            message = "Correct! You earned 10 points."
+
+        else:
+            app_data["score"] += 5
+            message = "Correct! You earned 5 points."
+
+        widgets["feedback_label"].config(
+            text=message,
+            fg=COLORS["easy"]
+        )
+
+        # Update the displayed score
+        widgets["score_label"].config(
+            text=f"{app_data['score']} pts"
+        )
+
+        resolve_question()
+
+    else:
+
+        # First incorrect attempt
+        if attempt == 1:
+
+            app_data["current_attempt"] = 2
+
+            widgets["feedback_label"].config(
+                text="Incorrect! Try one more time.",
+                fg=COLORS["error"]
+            )
+
+            widgets["answer_entry"].delete(0, END)
+
+        # Second incorrect attempt
+        else:
+
+            widgets["feedback_label"].config(
+                text=f"No points! The correct answer was {correct_answer}.",
+                fg=COLORS["error"]
+            )
+
+            resolve_question()
+
+def resolve_question():
+
+    # Mark the current question as completed
+    app_data["completed_questions"] += 1
+
+    # Update the progress bar
+    update_progress()
+
+    # Prevent further answers for this question
+    widgets["answer_entry"].config(state=DISABLED)
+
+    # Change the submit button into a navigation button
+    widgets["submit_button"].config(
+        text="NEXT QUESTION",
+        command=advance_question
+    )
+
+def advance_question():
+
+    # Retrieve the total number of questions
+    difficulty = app_data["selected_difficulty"]
+
+    total = DIFFICULTIES[difficulty]["question_count"]
+
+    # Check whether the quiz has finished
+    if app_data["completed_questions"] >= total:
+        finish_quiz()
+        return
+
+    # Move to the next question
+    app_data["current_question"] += 1
+
+    # Reset the attempt counter
+    app_data["current_attempt"] = 1
+
+    # Update the question counter
+    widgets["question_count_label"].config(
+        text=f"{app_data['current_question']:02d} / {total}"
+    )
+
+    # Generate the next question
+    display_question()
+
+    # Restore the answer input
+    widgets["answer_entry"].config(state=NORMAL)
+
+    # Reset feedback
+    widgets["feedback_label"].config(
+        text="",
+        fg=COLORS["fg_muted"]
+    )
+
+    # Restore the submit button
+    widgets["submit_button"].config(
+        text="SUBMIT ANSWER",
+        command=submit_answer
+    )
 
 def update_progress():
 
-    # Retrieve completed and total questions
+    # ! - Find the completed and total questions for the active tier.
     completed = app_data["completed_questions"]
 
     difficulty = app_data["selected_difficulty"]
     total = DIFFICULTIES[difficulty]["question_count"]
 
-    # Calculate completion percentage
+    # ! - Scale the progress fill to the completed fraction of the quiz.
     percentage = completed / total
 
-    # Retrieve the Canvas dimensions
+    # ! - Use the Canvas width to size the fill rectangle.
     canvas = widgets["progress_canvas"]
     canvas_width = canvas.winfo_width()
 
-    # Calculate how wide the progress fill should be
     fill_width = canvas_width * percentage
 
-    # Update the rectangle
+    # ! - Redraw the fill and update the completed/total text.
     canvas.coords(
         widgets["progress_fill"],
         0, 0,
         fill_width, 9
     )
 
-    # Update the progress text
+    # ! - Update the completed-question count displayed under the bar.
     widgets["progress_label"].config(
         text=f"{completed} / {total} questions completed"
     )
@@ -210,20 +336,18 @@ def update_progress():
 # =============================================================
 
 def create_difficulty_card(parent, difficulty, details):
-    # ! - Creates reusable difficulty card.
-    # ! - Uses a specialized components that would easily create the 3 difficulty cards needed for the quiz homescreen.
-    # ! - Below are the declarations of various variables and attributes that create the key components such as difficulty descriptions, colors, etc.
+    # ! - Build one card from a tier key and its matching DIFFICULTIES settings.
     title = difficulty.title()
     color = COLORS[difficulty]
     
-    # ! - Main card container
+    # ! - Keep each card's accent, text, and button inside one reusable container.
     card = Frame(
         parent,
         bg=COLORS["bg_card_inner"]
     )
     card.pack(fill="x", pady=9)
 
-    # ! - Coloured vertical accent on the left
+    # ! - Mark the card with the color associated with its difficulty.
     accent = Frame(
         card,
         bg=color,
@@ -231,7 +355,7 @@ def create_difficulty_card(parent, difficulty, details):
     )
     accent.pack(side=LEFT, fill="y")
     
-    # ! - Container for the card's text
+    # ! - Group the title, range, question count, and description together.
     content = Frame(
         card,
         bg=COLORS["bg_card_inner"]
@@ -244,7 +368,7 @@ def create_difficulty_card(parent, difficulty, details):
         pady=12
     )
     
-    # ! - Difficulty heading
+    # ! - Show the difficulty name and its configured details.
     Label(
         content,
         text=title,
@@ -275,6 +399,7 @@ def create_difficulty_card(parent, difficulty, details):
         fg=COLORS["fg_muted"]
     ).pack(anchor="w")
     
+    # ! - Start a round for this tier when its button is pressed.
     Button(
         card,
         text=f"Start {title.title()} →",
@@ -293,15 +418,14 @@ def create_difficulty_card(parent, difficulty, details):
 # 3.1 HOMESCREEN FRAME !
 # =============================================================
 def create_home_frame():
-    # ! - Create the first screen of the application.
-    # ! - Difficulty selection screen.
+    # ! - Build the home screen where the player chooses a difficulty.
 
     frame = Frame(
         root,
         bg=COLORS["bg_color"]
     )
     
-    # Main content panel
+    # ! - Center the home screen content inside a contrasting panel.
     panel = Frame(
         frame,
         bg=COLORS["bg_card"]
@@ -313,7 +437,7 @@ def create_home_frame():
         expand="true"
     )
     
-    # Small application heading
+    # ! - Identify the application and introduce the difficulty choices.
     Label(
         panel,
         text="- ARITHMETIC MATH QUIZ! -",
@@ -331,7 +455,7 @@ def create_home_frame():
         fg=COLORS["fg_text"]
     ).pack()
     
-    # ! - Greetings Description and challenge introduction.
+    # ! - Explain the quiz scoring rules before the player starts.
     Label(
         panel,
         text="Choose your challenge tier. Each tier has 10 questions each.\n"
@@ -342,7 +466,7 @@ def create_home_frame():
         justify="center"
     ).pack(pady=12)   
 
-    # Container for the difficulty cards
+    # ! - Hold one generated card for each configured difficulty.
     cards_container = Frame(
         panel,
         bg=COLORS["bg_card"]
@@ -353,7 +477,7 @@ def create_home_frame():
         pady=35
     )
     
-    # ! - Further optimized code instead of calling all different items repeatedly, the card builder receives and loops the settings dictionary directly.
+    # ! - Build cards from the configuration so tier details stay in one place.
     for difficulty, details in DIFFICULTIES.items():
         create_difficulty_card(cards_container, difficulty, details)
 
@@ -363,14 +487,14 @@ def create_home_frame():
 # 3.2 MAINQUIZ FRAME !
 # =============================================================
 def create_quiz_frame():
-    # Creates the main quiz interface.
+    # ! - Build the quiz screen and save widgets that callbacks update later.
 
     frame = Frame(
         root,
         bg=COLORS["bg_color"]
     )
 
-    # Main content panel
+    # ! - Center the quiz sections inside the main content panel.
     panel = Frame(
         frame,
         bg=COLORS["bg_card"]
@@ -396,7 +520,7 @@ def create_quiz_frame():
         pady=(5, 15)
     )
 
-    # Progress information
+    # ! - Display the completed and total question counts.
     widgets["progress_label"] = Label(
         progress_section,
         text="0 / 10 questions completed",
@@ -406,7 +530,7 @@ def create_quiz_frame():
     )
     widgets["progress_label"].pack(anchor="w", pady=(0, 6))
 
-    # Canvas acts as the progress bar background
+    # ! - Use a Canvas so update_progress can resize the colored fill.
     widgets["progress_canvas"] = Canvas(
         progress_section,
         height=9,
@@ -415,7 +539,7 @@ def create_quiz_frame():
     )
     widgets["progress_canvas"].pack(fill="x")
 
-    # Draw the progress fill (initially empty)
+    # ! - Keep the fill item ID so update_progress can redraw it.
     widgets["progress_fill"] = widgets["progress_canvas"].create_rectangle(
         0, 0, 0, 9,
         fill=COLORS["moderate"],
@@ -453,10 +577,7 @@ def create_quiz_frame():
     )
     widgets["quiz_difficulty_label"].pack(side=RIGHT)
 
-    # ------------------------------------------
-    # SCORE AND QUESTION COUNTER
-    # ------------------------------------------
-
+    # ! - Group the current question number and score in the quiz header.
     info_container = Frame(
         panel,
         bg=COLORS["bg_card"]
@@ -467,7 +588,7 @@ def create_quiz_frame():
         pady=15
     )
 
-    # Question counter
+    # ! - Present the current question against the tier's total.
     question_section = Frame(
         info_container,
         bg=COLORS["bg_card"]
@@ -491,7 +612,7 @@ def create_quiz_frame():
     )
     widgets["question_count_label"].pack(anchor="w")
 
-    # Score display
+    # ! - Show the player's current score.
     score_section = Frame(
         info_container,
         bg=COLORS["bg_card"]
@@ -582,18 +703,27 @@ def create_quiz_frame():
         pady=(5, 15),
         ipady=8
     )
+    widgets["feedback_label"] = Label(
+    answer_panel,
+    text="",
+    font=FONTS["body"],
+    bg=COLORS["bg_card_inner"],
+    fg=COLORS["fg_muted"]
+    )
+    widgets["feedback_label"].pack(pady=8)
 
-    # Submit button will be connected in our next lesson.
+    # ! - Keep submission disabled until answer-checking behavior is added.
     widgets["submit_button"] = Button(
         answer_panel,
         text="SUBMIT ANSWER",
-        font=FONTS["body_bold"],
+        font=FONTS["body"],
         bg=COLORS["moderate"],
-        fg=COLORS["fg_muted"],
-        disabledforeground=COLORS["bg_color"],
+        fg=COLORS["bg_color"],
         relief="flat",
-        state=DISABLED
+        state=NORMAL,
+        command=submit_answer
     )
+
     widgets["submit_button"].pack(
         fill="x",
         padx=15,
@@ -607,14 +737,14 @@ def create_quiz_frame():
 # 4. APPLICATION SETUP
 # =============================================================
 
-# ! - Dictionaries for storing application objects
+# ! - Create the root window before building any frames or widgets.
 root = Tk()
 
 root.title("Multiple Frames Example")
 root.geometry(WINDOW_SIZE)
 root.config(bg=COLORS["bg_color"],)
 
-# ! - dictionaries
+# ! - Store named frames and widgets for later navigation and updates.
 frames = {}
 widgets = {}
 # ! - Stores individual widgets so functions can access
@@ -622,8 +752,7 @@ widgets = {}
 # ! - Widgets help me store individual interface components like greeting labels or name entries.
 
 
-# ! - Helps store information such as selected difficulty.
-# ! - Unlike widgets that is currently storing interface components, app_data helps store application information.
+# ! - Hold quiz state separately from the visible Tkinter widgets.
 app_data = {
     "selected_difficulty": None,
     "score": 0,
@@ -631,11 +760,11 @@ app_data = {
     "current_attempt": 1,
     "completed_questions": 0,
     
-    #Stores the currently generated question
+    # ! - Keep the current problem and its answer for answer validation.
     "current_question_data": 0
 }
 
-# ! - Create both frames
+# ! - Build and stack both screens in the same window for frame switching.
 frames["home"] = create_home_frame()
 frames["quiz"] = create_quiz_frame()
 # Position both frames in the same location
