@@ -332,6 +332,46 @@ def create_quiz_frame():
         fill="both",
         expand=True
     )
+    
+    # ------------------------------------------
+    # QUIZ PROGRESS BAR
+    # ------------------------------------------
+
+    progress_section = Frame(
+        panel,
+        bg=COLORS["bg_card"]
+    )
+    progress_section.pack(
+        fill="x",
+        padx=30,
+        pady=(5, 15)
+    )
+
+    # Progress information
+    widgets["progress_label"] = Label(
+        progress_section,
+        text="0 / 10 questions completed",
+        font=("Helvetica", 10),
+        bg=COLORS["bg_card"],
+        fg=COLORS["fg_muted"]
+    )
+    widgets["progress_label"].pack(anchor="w", pady=(0, 6))
+
+    # Canvas acts as the progress bar background
+    widgets["progress_canvas"] = Canvas(
+        progress_section,
+        height=9,
+        bg=COLORS["bg_card_inner"],
+        highlightthickness=0
+    )
+    widgets["progress_canvas"].pack(fill="x")
+
+    # Draw the progress fill (initially empty)
+    widgets["progress_fill"] = widgets["progress_canvas"].create_rectangle(
+        0, 0, 0, 9,
+        fill=COLORS["moderate"],
+        outline=""
+    )
 
     # ------------------------------------------
     # HEADER
