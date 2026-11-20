@@ -114,7 +114,7 @@ def create_difficulty_card(parent, title, subtitle, description, color, difficul
         font=FONTS["heading"],
         bg=COLORS["bg_card_inner"],
         fg=color
-    ).pack(anchor="W")
+    ).pack(anchor="w")
     
     # ! - Difficulty subtitle
     Label(
@@ -245,6 +245,10 @@ def create_home_frame():
 def create_second_frame():
     # ! - Create the second screen of the application.
     # ! - Deleted contents to make way for appropriate difficulty test.
+    frame = Frame(
+        root,
+        bg=COLORS["bg_color"]
+    )
     
     widgets["selected_difficulty_label"] = Label(
     frame,
@@ -252,7 +256,7 @@ def create_second_frame():
     font=FONTS["heading"],
     bg=COLORS["bg_color"],
     fg=COLORS["fg_text"]
-)
+    )
     widgets["selected_difficulty_label"].pack(pady=15)
 
     return frame
@@ -279,9 +283,7 @@ app_data = {
     "selected_difficulty": None,
 }
 
-
 # ! - Create both frames
-# Create both frames
 frames["home"] = create_home_frame()
 frames["second"] = create_second_frame()
 
