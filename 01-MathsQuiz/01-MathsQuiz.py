@@ -130,6 +130,30 @@ def generate_question():
         "operation": operation,
         "answer": answer
     }
+    
+def display_question():
+
+    # Generate a new question
+    question = generate_question()
+
+    # Store the question for later answer validation
+    app_data["current_question_data"] = question
+
+    # Format the question for the interface
+    question_text = (
+        f"{question['number1']} "
+        f"{question['operation']} "
+        f"{question['number2']} = ?"
+    )
+
+    # Display the question
+    widgets["question_label"].config(
+        text=question_text
+    )
+
+    # Clear the previous answer
+    widgets["answer_entry"].delete(0, END)
+
 
 
 # =============================================================
