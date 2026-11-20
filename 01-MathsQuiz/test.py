@@ -6,6 +6,8 @@ def display_greeting():
     name2.config(text=f"Hello, {name}!")
     switch_to_frame(frame2)
 
+#Testing my first GitHub connection!
+
 root = Tk()
 root.config(bg="#FFFFFF")
 root.title("Multiple Frames Example")
