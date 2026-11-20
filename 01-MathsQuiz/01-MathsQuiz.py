@@ -1,5 +1,6 @@
 from tkinter import *
 
+
 # ==============================================================
 # 1. CONFIGURATION - Colors, Fonts, and Declaration
 # ==============================================================
@@ -29,37 +30,15 @@ FONTS = {
     "heading": ("Helvetica", 14),
     "body": ("Helvetica", 12),
 }
-# ! - Testing my first GitHub connection!
 WINDOW_SIZE = "800x800"
 
 # ==============================================================
 # 2. FUNCTIONS
 # ==============================================================
 
-
-def switch_to_frame(frame):
-    # ! - Bring the selected frame to the front.
-    frame.tkraise()
-
-
-def display_greeting():
-    # ! - Retrieve the name and display a greeting.
-    name = widgets["name_entry"].get().strip()
-
-    if name:
-        widgets["greeting_label"].config(
-            text=f"Hello, {name}!",
-            fg=COLORS["fg_text"]
-        )
-    else:
-        widgets["greeting_label"].config(
-            text="Please enter your name.",
-            fg=COLORS["error"]
-        )
-
 def select_difficulty(difficulty):
 
-    # Store the selected difficulty
+    # Stores the selected difficulty
     app_data["selected_difficulty"] = difficulty
 
     # Update the next screen
@@ -77,7 +56,7 @@ def select_difficulty(difficulty):
 
 def create_difficulty_card(parent, title, subtitle, description, color, difficulty):
     # ! - Creates reusable difficulty card.
-    # ! - Uses a specialized format that would easily create the 3 difficulty cards needed for the quiz.
+    # ! - Uses a specialized components that would easily create the 3 difficulty cards needed for the quiz.
 
     # ! - Main card container
     card = Frame(
