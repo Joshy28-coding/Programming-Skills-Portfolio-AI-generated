@@ -91,10 +91,16 @@ WINDOW_SIZE = "800x800"
 # ==============================================================
 
 def switch_to_frame(frame):
+    """Raise the requested Tkinter frame so it becomes the visible screen."""
     # ! - Bring the selected frame to the front.
     frame.tkraise()
 
 def select_difficulty(difficulty):
+    """Start a fresh quiz at the chosen tier and show its first question.
+
+    Resets the round state, refreshes the quiz header and score, prepares a
+    question, and updates the progress bar after the quiz frame is displayed.
+    """
 
     # ! - Save the chosen tier and reset state so each round starts fresh.
     app_data["selected_difficulty"] = difficulty
@@ -131,8 +137,13 @@ def select_difficulty(difficulty):
     root.update_idletasks()
     update_progress()
     
-# ! - Generate one arithmetic problem using the selected tier's number range.
+
 def generate_question():
+    """Create a random addition or non-negative subtraction problem.
+
+    The selected tier supplies both operand bounds. Return the operands,
+    operator, and calculated answer together for display and answer checking.
+    """
 
     # ! - Use the selected tier to determine the range for both operands.
     difficulty = app_data["selected_difficulty"]
@@ -170,8 +181,8 @@ def generate_question():
     }
     
 def display_question():
+    """Generate a question, save its answer data, and refresh the quiz UI."""
 
-    # ! - Generate a problem and retain its answer for later checking.
     question = generate_question()
 
     # Store the question for later answer validation
@@ -192,6 +203,12 @@ def display_question():
 
 
 def submit_answer():
+    """Validate an answer and apply the quiz's two-attempt scoring rules.
+
+    Empty or non-integer input is rejected. A correct first attempt earns
+    10 points and a correct retry earns 5; a second incorrect answer reveals
+    the solution. Resolved questions are passed to ``resolve_question``.
+    """
 
     # Retrieve the student's input
     user_input = widgets["answer_entry"].get().strip()
@@ -271,6 +288,11 @@ def submit_answer():
             resolve_question()
 
 def resolve_question():
+    """Mark the current question complete and prepare the next-step button.
+
+    Updates progress, disables further input for this question, and changes
+    the submit button to advance the quiz.
+    """
 
     # Mark the current question as completed
     app_data["completed_questions"] += 1
@@ -288,6 +310,11 @@ def resolve_question():
     )
 
 def advance_question():
+    """Finish the quiz or reset the interface for the next question.
+
+    Completion is checked before advancing. Otherwise, the question and
+    attempt counters, answer field, feedback, and submit action are reset.
+    """
 
     # Retrieve the total number of questions
     difficulty = app_data["selected_difficulty"]
@@ -329,6 +356,7 @@ def advance_question():
     )
 
 def update_progress():
+    """Resize the progress-bar fill and update its completed-question text."""
 
     # ! - Find the completed and total questions for the active tier.
     completed = app_data["completed_questions"]
@@ -358,6 +386,11 @@ def update_progress():
     )
     
 def calculate_rank(score):
+    """Return the first rank and description whose minimum score is met.
+
+    ``RANKINGS`` is ordered from the highest threshold to the lowest, so the
+    first match is the best qualifying rank.
+    """
 
     # Check each ranking category
     for rank, details in RANKINGS.items():
@@ -366,6 +399,7 @@ def calculate_rank(score):
             return rank, details["description"]
 
 def finish_quiz():
+    """Populate the final score, summary, and rank before showing results."""
 
     difficulty = app_data["selected_difficulty"]
 
@@ -405,6 +439,12 @@ def finish_quiz():
 # =============================================================
 
 def create_difficulty_card(parent, difficulty, details):
+    """Build and return one difficulty card with its settings and start button.
+
+    The button starts a quiz for this tier; its title, range, question count,
+    description, and accent color all come from the supplied configuration.
+    """
+
     # ! - Build one card from a tier key and its matching DIFFICULTIES settings.
     title = difficulty.title()
     color = COLORS[difficulty]
@@ -487,7 +527,9 @@ def create_difficulty_card(parent, difficulty, details):
 # 3.1 HOMESCREEN FRAME !
 # =============================================================
 def create_home_frame():
-    # ! - Build the home screen where the player chooses a difficulty.
+    """Build the home screen and create a card for every difficulty tier."""
+
+
 
     frame = Frame(
         root,
@@ -556,7 +598,11 @@ def create_home_frame():
 # 3.2 MAINQUIZ FRAME !
 # =============================================================
 def create_quiz_frame():
-    # ! - Build the quiz screen and save widgets that callbacks update later.
+    """Build the quiz screen and register widgets used by quiz callbacks.
+
+    Creates the progress display, question and score headers, answer input,
+    feedback label, and submit button, then returns the containing frame.
+    """
 
     frame = Frame(
         root,
@@ -803,8 +849,11 @@ def create_quiz_frame():
 
 
 def create_results_frame():
+    """Build the final-score screen and register its labels for later updates.
 
-    # Creates the final scoreboard.
+    The labels are populated by ``finish_quiz``; the return button navigates
+    back to the home screen.
+    """
 
     frame = Frame(
         root,
