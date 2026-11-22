@@ -386,16 +386,16 @@ def finish_quiz():
         text=f"You completed {total} questions! "
              f"Your final score is {percentage:.1f}%."
     )
+
+    rank, description = calculate_rank(score)
     
     widgets["final_rank_label"].config(
-    text=rank
+        text=rank
     )
 
     widgets["rank_description_label"].config(
         text=description
     )
-    # Calculate the student's rank
-    rank, description = calculate_rank(score)
 
     # Display results
     switch_to_frame(frames["results"])
@@ -866,7 +866,7 @@ def create_results_frame():
     font=FONTS["body"],
     bg=COLORS["bg_card"],
     fg=COLORS["fg_muted"]
-)
+    )
     widgets["rank_description_label"].pack(pady=5)
 
     # Return to home screen
