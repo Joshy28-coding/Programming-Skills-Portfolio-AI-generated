@@ -133,6 +133,37 @@ def calculate_grade(percentage):
 # Load student records into the program.
 student_list = load_students()
 
+def view_all_students():
+    """Display all student records and the class average."""
+
+    total_percentage = 0
+
+    for student in student_list:
+
+        coursework = calculate_coursework(student)
+        percentage = calculate_percentage(student)
+        grade = calculate_grade(percentage)
+
+        print("-----------------------------------")
+        print(f"Student Name: {student['name']}")
+        print(f"Student Number: {student['student_number']}")
+        print(f"Coursework: {coursework}/60")
+        print(f"Exam Mark: {student['exam']}/100")
+        print(f"Overall Percentage: {percentage:.2f}%")
+        print(f"Grade: {grade}")
+
+        total_percentage += percentage
+
+    # Calculate the average percentage for the class.
+    if student_list:
+        average_percentage = total_percentage / len(student_list)
+
+        print("-----------------------------------")
+        print("CLASS SUMMARY")
+        print(f"Number of Students: {len(student_list)}")
+        print(f"Class Average: {average_percentage:.2f}%")
+        print("-----------------------------------")
+
 # TEMPORARY TEST - Display loaded student information.
 for student in student_list:
 
