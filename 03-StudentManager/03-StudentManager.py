@@ -4,6 +4,7 @@ from pathlib import Path
 # ==============================================================
 #   Dictionaries and Declarations 
 # ==============================================================
+
 COLORS = {
     # ! - Background Colors
     "bg_color": "#0B0F19",  # Background color
@@ -99,12 +100,16 @@ def load_students():
 # Load student records into the program.
 student_list = load_students()
 
+# TEMPORARY TEST - Display loaded student information.
+for student in student_list:
+    print(student)
+
 # ==============================================================
 #   ! APPLICATION SETUP ! 
 # ==============================================================
 
 root = Tk()
-root.title("Alexa - Joke Assistant")
+root.title("Student Manager")
 root.geometry(WINDOW_SIZE)
 root.config(bg=COLORS["bg_color"])
 
