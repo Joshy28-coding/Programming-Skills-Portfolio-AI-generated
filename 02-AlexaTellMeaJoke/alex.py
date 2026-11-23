@@ -148,9 +148,51 @@ def next_joke():
 # ==============================================================
 
 root = Tk()
-root.title("Alexa")
+root.title("Alexa - Joke Assistant")
 root.geometry(WINDOW_SIZE)
 root.config(bg=COLORS["bg_color"])
 
+# Prevent the window from being resized
+root.resizable(False, True)
+
+# =============================================================
+# ! MAIN APPLICATION FRAME !
+# =============================================================
+
+main_frame = Frame(
+    root,
+    bg=COLORS["bg_color"]
+)
+main_frame.pack(
+    fill="both",
+    expand=True,
+    padx=40,
+    pady=40
+)
+
+# =============================================================
+# ! ASSISTANT CARD !
+# =============================================================
+card_frame = Frame(
+    main_frame,
+    bg=COLORS["bg_card"]
+    padx=30,
+    pady=30
+)
+card_frame.pack(
+    fill="both"
+    expand=True
+)
+# =============================================================
+# ! HEADER SECTION !
+# =============================================================
+
+title_label = Label(
+    card_frame,
+    text="ALEXA",
+    font=FONTS["title"]
+    fg= COLORS["fg_text"],
+    bg=["bg_card"]
+)title_label.pack(pady(15, 5))
 
 root.mainloop()
