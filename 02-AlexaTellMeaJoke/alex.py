@@ -276,4 +276,69 @@ joke_button.pack(
     fill="x",
     pady=8
 )
+
+# Show punchline button
+punchline_button = Button(
+    button_frame,
+    text="Show Punchline",
+    font=FONTS["body"],
+    fg=COLORS["fg_text"],
+    bg=COLORS["bg_card_inner"],
+    activebackground="#374151",
+    activeforeground=COLORS["fg_text"],
+    command=show_punchline,
+    cursor="hand2",
+    relief="flat",
+    pady=10
+)
+punchline_button.pack(
+    fill="x",
+    pady=5
+)
+
+
+# Next joke button
+next_button = Button(
+    button_frame,
+    text="Next Joke",
+    font=FONTS["body"],
+    fg=COLORS["fg_text"],
+    bg=COLORS["bg_card_inner"],
+    activebackground="#374151",
+    activeforeground=COLORS["fg_text"],
+    command=next_joke,
+    cursor="hand2",
+    relief="flat",
+    pady=10
+)
+next_button.pack(
+    fill="x",
+    pady=5
+)
+
+
+# Quit button
+quit_button = Button(
+    button_frame,
+    text="Quit",
+    font=FONTS["body"],
+    fg=COLORS["fg_text"],
+    bg="#991B1B",
+    activebackground="#7F1D1D",
+    activeforeground=COLORS["fg_text"],
+    command=root.destroy,
+    cursor="hand2",
+    relief="flat",
+    pady=10
+)
+quit_button.pack(
+    fill="x",
+    pady=5
+)
+
+
+# ==============================================================
+# START APPLICATION
+# ==============================================================
+
 root.mainloop()
