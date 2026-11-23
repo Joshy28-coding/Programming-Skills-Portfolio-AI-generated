@@ -207,7 +207,8 @@ def view_individual_student(student_number):
         return
 
     display_student_record(student, "INDIVIDUAL STUDENT RECORD")
-    
+
+
 # ==============================================================
 #   STUDENT PERFORMANCE FUNCTIONS
 # ==============================================================
@@ -225,9 +226,25 @@ def show_highest_student():
         highest_student,
         "HIGHEST OVERALL STUDENT"
     )
+    
+def show_lowest_student():
+    """Find and display the student with the lowest overall score."""
 
-# TEMPORARY TEST - Find an individual student.
-view_individual_student(9999)
+    if not student_list:
+        print("There are no student records available.")
+        return
+
+    lowest_student = min(student_list, key=calculate_percentage)
+
+    display_student_record(
+        lowest_student,
+        "LOWEST OVERALL STUDENT"
+    )
+
+# TEMPORARY TEST - Highest and lowest student scores.
+show_highest_student()
+
+show_lowest_student()
 
 # ==============================================================
 #   ! APPLICATION SETUP ! 
