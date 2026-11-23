@@ -285,12 +285,36 @@ def sort_students(ascending=True):
     print(f"Class Average: {average_percentage:.2f}%")
     print("-----------------------------------")
 
+# ==============================================================
+#   SAVE STUDENT DATA
+# ==============================================================
 
-# TEMPORARY TEST - Sort student records.
+def save_students():
+    """Save all student records back into the text file."""
 
-sort_students(ascending=True)
+    try:
+        with open(STUDENT_FILE, "w", encoding="utf-8") as file:
+            file.write(f"{len(student_list)}\n")
 
-sort_students(ascending=False)
+            for student in student_list:
+                coursework = student["coursework"]
+
+                file.write(
+                    f"{student['student_number']},"
+                    f"{student['name']},"
+                    f"{coursework[0]},"
+                    f"{coursework[1]},"
+                    f"{coursework[2]},"
+                    f"{student['exam']}\n"
+                )
+
+        print("Student records saved successfully.")
+        return True
+
+    except OSError as error:
+        print(f"Error saving student records: {error}")
+        return False
+
 
 # ==============================================================
 #   ! APPLICATION SETUP ! 
