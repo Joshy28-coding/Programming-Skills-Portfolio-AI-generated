@@ -1,5 +1,6 @@
 from tkinter import *
 from pathlib import Path
+import random
 
 # ==============================================================
 #   Dictionaries and Declarations 
@@ -91,7 +92,56 @@ def joke_check():
     if joke_list:
         print(joke_list[0]["setup"])
         print(joke_list[0]["punchline"])
-    
+
+# ==============================================================
+# JOKE INTERACTION FUNCTIONS
+# ==============================================================
+
+# Stores the currently selected joke.
+current_joke = None
+
+def tell_joke():
+    """Select a random joke and display its setup."""
+
+    global current_joke
+
+    if not joke_list:
+        setup_label.config(text="Sorry! I couldn't find any jokes.")
+        punchline_label.config(text="")
+        return
+
+    # Avoid repeating the previous joke when possible.
+    available_jokes = [
+        joke for joke in joke_list
+        if joke != current_joke
+    ]
+
+    current_joke = random.choice(available_jokes)
+
+    # Display the joke setup.
+    setup_label.config(text=current_joke["setup"])
+
+    # Keep the punchline hidden until requested.
+    punchline_label.config(text="")
+
+    status_label.config(text="I've got a joke for you!")
+
+
+def show_punchline():
+    """Reveal the punchline of the currently selected joke."""
+
+    if current_joke is None:
+        status_label.config(text="Ask me for a joke first!")
+        return
+
+    punchline_label.config(text=current_joke["punchline"])
+    status_label.config(text="Hope you enjoyed that!")
+
+
+def next_joke():
+    """Load another joke."""
+
+    tell_joke()
 
 # ==============================================================
 #   ! APPLICATION SETUP ! 
