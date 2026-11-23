@@ -445,6 +445,22 @@ def delete_student(student_number=None, name=None):
         print("Student was not deleted because saving failed.")
 
 # ==============================================================
+#   TEMPORARY TESTS
+# ==============================================================
+
+# Test adding a student.
+add_student(5555, "Test Student", 15, 16, 17, 80)
+
+# Check whether the student was added.
+view_individual_student(5555)
+
+# Test deleting a student using their number.
+delete_student(student_number=5555)
+
+# Check whether the student was deleted.
+view_individual_student(5555)
+
+# ==============================================================
 #   ! APPLICATION SETUP ! 
 # ==============================================================
 
