@@ -195,4 +195,83 @@ title_label = Label(
     bg=["bg_card"]
 )title_label.pack(pady(15, 5))
 
+status_label = Label(
+    card_frame,
+    text="Hello! I'm ready to tell you a very silly joke, listen in?"
+    font=FONTS["body"],
+    fg=COLORS["fg_muted"],
+    bg=["bg_card"]
+)status_label.pack(pady=(0, 30))
+
+# ==============================================================
+# JOKE DISPLAY SECTION
+# ==============================================================
+
+joke_frame = Frame(
+    card_frame,
+    bg=COLORS["bg_card_inner"],
+    padx=25,
+    pady=35
+)
+
+joke_frame.pack(
+    fill="x",
+    pady=10
+)
+
+
+setup_label = Label(
+    joke_frame,
+    text="Press the button below to hear a joke!",
+    font=FONTS["heading"],
+    fg=COLORS["fg_text"],
+    bg=COLORS["bg_card_inner"],
+    wraplength=550,
+    justify="center"
+)
+
+setup_label.pack(pady=(10, 25))
+
+
+punchline_label = Label(
+    joke_frame,
+    text="",
+    font=FONTS["body_bold"],
+    fg="#60A5FA",
+    bg=COLORS["bg_card_inner"],
+    wraplength=550,
+    justify="center"
+)
+
+punchline_label.pack(pady=(5, 10))
+
+# ==============================================================
+# JOKE DISPLAY SECTION
+# ==============================================================
+
+button_frame = Frame(
+    card_frame,
+    bg=COLORS["bg_card"]
+)
+button_frame.pack(fill="x", pady=25)
+
+# The Main silly joke button
+joke_button = Button(
+    button_frame,
+    text="Alexa tell me a joke!"
+    font=FONTS["body_bold"]
+    fg=COLORS["fg_text"]
+    bg="#2563EB"
+    activebackground="#1D4ED8"
+    activeforeground=COLORS[fg_text]
+    command=tell_joke,
+    crusor="hand2",
+    relief="flat",
+    padx=20,
+    pady=12
+)
+joke_button.pack(
+    fill="x"
+    pady=8
+)
 root.mainloop()
