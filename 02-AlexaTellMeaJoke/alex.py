@@ -25,6 +25,12 @@ FONTS = {
 
 WINDOW_SIZE = "800x800"
 
+# Get the directory where this Python file is located.
+BASE_DIR = Path(__file__).resolve().parent
+
+# Locate the resources folder and its text file.
+JOKE_FILE = BASE_DIR / "resources" / "randomJokes.txt"
+
 print("Testing GitHub Alignment.")
 # Second test in aligning Cloned repository with Github
 
@@ -77,9 +83,20 @@ def load_jokes():
         
     return jokes
 
+# Load the jokes from the external file text.
+joke_list  = load_jokes()
+
+# TEMPORARY CHECK TEST = Display the first joke to test the dataset.
+def joke_check():
+    if joke_list:
+        print(joke_list[0]["setup"])
+        print(joke_list[0]["punchline"])
+    
+
 # ==============================================================
 #   ! APPLICATION SETUP ! 
 # ==============================================================
+
 root = Tk()
 root.title("Alexa")
 root.geometry(WINDOW_SIZE)
