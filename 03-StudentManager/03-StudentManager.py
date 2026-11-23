@@ -506,30 +506,268 @@ def update_student(student_number, new_name, coursework1, coursework2,
         student_list[student_list.index(student)] = original_student
         print("Student was not updated because saving failed.")
 
-# ==============================================================
-#   TEST UPDATE STUDENT
-# ==============================================================
-
-# Update Jake Hobbs' academic information.
-update_student(8439, "Jake Hobbs", 18, 17, 19, 85)
-
-# Display his updated record.
-view_individual_student(8439)
 
 # ==============================================================
-#   ! APPLICATION SETUP ! 
+#   ! APPLICATION SETUP !
 # ==============================================================
 
 root = Tk()
 root.title("Student Manager")
-root.geometry(WINDOW_SIZE)
+root.geometry("1100x760")
 root.config(bg=COLORS["bg_color"])
+root.minsize(900, 650)
 
-# Prevent the window from being resized
-root.resizable(False, True)
+# Main window layout.
+root.grid_columnconfigure(1, weight=1)
+root.grid_rowconfigure(1, weight=1)
+
 
 # ==============================================================
-# START APPLICATION
+#   HELPER FUNCTIONS
+# ==============================================================
+
+def create_label(parent, text, font, color, bg):
+    """Create a consistently styled label."""
+    return Label(
+        parent,
+        text=text,
+        font=font,
+        fg=color,
+        bg=bg
+    )
+
+
+def show_placeholder(section):
+    """Temporarily display which section was selected."""
+    results_text.config(state=NORMAL)
+    results_text.delete("1.0", END)
+    results_text.insert(
+        END,
+        f"{section}\n\n"
+        "This section will be connected to the student functions "
+        "in the next stages."
+    )
+    results_text.config(state=DISABLED)
+
+
+# ==============================================================
+#   HEADER
+# ==============================================================
+
+header = Frame(
+    root,
+    bg=COLORS["bg_card"],
+    height=85
+)
+header.grid(row=0, column=0, columnspan=2, sticky="ew")
+header.grid_propagate(False)
+
+header.grid_columnconfigure(0, weight=1)
+
+create_label(
+    header,
+    "STUDENT MANAGER",
+    FONTS["title"],
+    COLORS["fg_text"],
+    COLORS["bg_card"]
+).grid(row=0, column=0, sticky="sw", padx=25, pady=(15, 0))
+
+create_label(
+    header,
+    "ACADEMIC RECORDS SYSTEM",
+    FONTS["body"],
+    COLORS["fg_muted"],
+    COLORS["bg_card"]
+).grid(row=1, column=0, sticky="nw", padx=27, pady=(2, 12))
+
+
+# ==============================================================
+#   SIDEBAR
+# ==============================================================
+
+sidebar = Frame(
+    root,
+    bg=COLORS["bg_card"],
+    width=220
+)
+sidebar.grid(row=1, column=0, sticky="ns")
+sidebar.grid_propagate(False)
+
+create_label(
+    sidebar,
+    "MAIN MENU",
+    FONTS["body_bold"],
+    COLORS["fg_muted"],
+    COLORS["bg_card"]
+).pack(anchor="w", padx=20, pady=(25, 12))
+
+
+def create_menu_button(parent, text, command):
+    """Create a reusable sidebar button."""
+    button = Button(
+        parent,
+        text=text,
+        font=FONTS["body"],
+        fg=COLORS["fg_text"],
+        bg=COLORS["bg_card"],
+        activeforeground=COLORS["fg_text"],
+        activebackground=COLORS["bg_card_inner"],
+        relief=FLAT,
+        anchor="w",
+        padx=20,
+        pady=12,
+        cursor="hand2",
+        command=command
+    )
+
+    button.pack(fill=X, padx=10, pady=2)
+
+    return button
+
+
+create_menu_button(
+    sidebar,
+    "Dashboard",
+    lambda: show_placeholder("DASHBOARD")
+)
+
+create_menu_button(
+    sidebar,
+    "View All Students",
+    lambda: show_placeholder("VIEW ALL STUDENTS")
+)
+
+create_menu_button(
+    sidebar,
+    "Find Student",
+    lambda: show_placeholder("FIND STUDENT")
+)
+
+create_label(
+    sidebar,
+    "STUDENT MANAGEMENT",
+    FONTS["body_bold"],
+    COLORS["fg_muted"],
+    COLORS["bg_card"]
+).pack(anchor="w", padx=20, pady=(25, 12))
+
+create_menu_button(
+    sidebar,
+    "Add Student",
+    lambda: show_placeholder("ADD STUDENT")
+)
+
+create_menu_button(
+    sidebar,
+    "Update Student",
+    lambda: show_placeholder("UPDATE STUDENT")
+)
+
+create_menu_button(
+    sidebar,
+    "Delete Student",
+    lambda: show_placeholder("DELETE STUDENT")
+)
+
+create_label(
+    sidebar,
+    "PERFORMANCE",
+    FONTS["body_bold"],
+    COLORS["fg_muted"],
+    COLORS["bg_card"]
+).pack(anchor="w", padx=20, pady=(25, 12))
+
+create_menu_button(
+    sidebar,
+    "Highest / Lowest",
+    lambda: show_placeholder("STUDENT PERFORMANCE")
+)
+
+create_menu_button(
+    sidebar,
+    "Sort Students",
+    lambda: show_placeholder("SORT STUDENTS")
+)
+
+
+# ==============================================================
+#   MAIN CONTENT AREA
+# ==============================================================
+
+main_content = Frame(
+    root,
+    bg=COLORS["bg_color"]
+)
+main_content.grid(row=1, column=1, sticky="nsew", padx=25, pady=25)
+
+main_content.grid_columnconfigure(0, weight=1)
+main_content.grid_rowconfigure(2, weight=1)
+
+
+# Dashboard heading.
+create_label(
+    main_content,
+    "Dashboard",
+    FONTS["title"],
+    COLORS["fg_text"],
+    COLORS["bg_color"]
+).grid(row=0, column=0, sticky="w")
+
+create_label(
+    main_content,
+    "Manage student records and academic performance.",
+    FONTS["body"],
+    COLORS["fg_muted"],
+    COLORS["bg_color"]
+).grid(row=1, column=0, sticky="w", pady=(5, 20))
+
+
+# ==============================================================
+#   RESULTS PANEL
+# ==============================================================
+
+results_card = Frame(
+    main_content,
+    bg=COLORS["bg_card"],
+    padx=20,
+    pady=20
+)
+results_card.grid(row=2, column=0, sticky="nsew")
+
+results_card.grid_columnconfigure(0, weight=1)
+results_card.grid_rowconfigure(1, weight=1)
+
+create_label(
+    results_card,
+    "STUDENT RECORDS",
+    FONTS["heading"],
+    COLORS["fg_text"],
+    COLORS["bg_card"]
+).grid(row=0, column=0, sticky="w", pady=(0, 15))
+
+
+results_text = Text(
+    results_card,
+    font=FONTS["body"],
+    fg=COLORS["fg_text"],
+    bg=COLORS["bg_entry"],
+    insertbackground=COLORS["fg_text"],
+    relief=FLAT,
+    wrap=WORD,
+    padx=15,
+    pady=15,
+    state=DISABLED
+)
+
+results_text.grid(
+    row=1,
+    column=0,
+    sticky="nsew"
+)
+
+
+# ==============================================================
+#   START APPLICATION
 # ==============================================================
 
 root.mainloop()
