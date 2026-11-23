@@ -135,6 +135,21 @@ student_list = load_students()
 
 # TEMPORARY TEST - Display loaded student information.
 for student in student_list:
+
+    coursework = calculate_coursework(student)
+    percentage = calculate_percentage(student)
+    grade = calculate_grade(percentage)
+
+    print(
+        f"{student['name']} | "
+        f"Coursework: {coursework}/60 | "
+        f"Exam: {student['exam']}/100 | "
+        f"Percentage: {percentage:.2f}% | "
+        f"Grade: {grade}"
+    )
+    
+# TEMPORARY TEST - Display loaded student information.
+for student in student_list:
     print(student)
 
 # ==============================================================
