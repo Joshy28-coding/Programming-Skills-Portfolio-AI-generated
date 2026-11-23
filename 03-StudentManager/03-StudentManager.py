@@ -180,23 +180,15 @@ def find_student(student_number):
     # Return None if no matching student was found.
     return None
 
-def view_individual_student(student_number):
-    """Find and display an individual student's results."""
+def display_student_record(student, heading="STUDENT RECORD"):
+    """Display the academic results of a student."""
 
-    student = find_student(student_number)
-
-    # Check whether a matching student was found.
-    if student is None:
-        print("No student found with that student number.")
-        return
-
-    # Calculate the student's results.
     coursework = calculate_coursework(student)
     percentage = calculate_percentage(student)
     grade = calculate_grade(percentage)
 
     print("-----------------------------------")
-    print("INDIVIDUAL STUDENT RECORD")
+    print(heading)
     print(f"Student Name: {student['name']}")
     print(f"Student Number: {student['student_number']}")
     print(f"Coursework: {coursework}/60")
@@ -205,8 +197,37 @@ def view_individual_student(student_number):
     print(f"Grade: {grade}")
     print("-----------------------------------")
 
+def view_individual_student(student_number):
+    """Find and display an individual student's results."""
+
+    student = find_student(student_number)
+
+    if student is None:
+        print("No student found with that student number.")
+        return
+
+    display_student_record(student, "INDIVIDUAL STUDENT RECORD")
+    
+# ==============================================================
+#   STUDENT PERFORMANCE FUNCTIONS
+# ==============================================================
+
+def show_highest_student():
+    """Find and display the student with the highest overall score."""
+
+    if not student_list:
+        print("There are no student records available.")
+        return
+
+    highest_student = max(student_list, key=calculate_percentage)
+
+    display_student_record(
+        highest_student,
+        "HIGHEST OVERALL STUDENT"
+    )
+
 # TEMPORARY TEST - Find an individual student.
-view_individual_student(1345)
+view_individual_student(9999)
 
 # ==============================================================
 #   ! APPLICATION SETUP ! 
