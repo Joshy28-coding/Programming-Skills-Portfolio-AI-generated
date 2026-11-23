@@ -939,7 +939,7 @@ def create_results_frame():
 # ! - Create the root window before building any frames or widgets.
 root = Tk()
 
-root.title("Multiple Frames Example")
+root.title("Arithmetic Math Quiz")
 root.geometry(WINDOW_SIZE)
 root.config(bg=COLORS["bg_color"],)
 
