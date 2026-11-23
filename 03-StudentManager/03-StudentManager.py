@@ -445,20 +445,76 @@ def delete_student(student_number=None, name=None):
         print("Student was not deleted because saving failed.")
 
 # ==============================================================
-#   TEMPORARY TESTS
+#   UPDATE STUDENT FUNCTION
 # ==============================================================
 
-# Test adding a student.
-add_student(5555, "Test Student", 15, 16, 17, 80)
+def update_student(student_number, new_name, coursework1, coursework2,
+                   coursework3, exam):
+    """Update an existing student's name and academic marks."""
 
-# Check whether the student was added.
-view_individual_student(5555)
+    # Find the student we want to update.
+    student = find_student(student_number)
 
-# Test deleting a student using their number.
-delete_student(student_number=5555)
+    if student is None:
+        print("Error: Student record not found.")
+        return
 
-# Check whether the student was deleted.
-view_individual_student(5555)
+    # Convert the new marks into integers.
+    try:
+        coursework1 = int(coursework1)
+        coursework2 = int(coursework2)
+        coursework3 = int(coursework3)
+        exam = int(exam)
+
+    except ValueError:
+        print("Error: Please enter valid numerical marks.")
+        return
+
+    # Validate the new name.
+    new_name = new_name.strip()
+
+    if not new_name:
+        print("Error: Student name cannot be empty.")
+        return
+
+    # Validate coursework marks.
+    new_coursework = [coursework1, coursework2, coursework3]
+
+    if any(mark < 0 or mark > 20 for mark in new_coursework):
+        print("Error: Each coursework mark must be between 0 and 20.")
+        return
+
+    # Validate exam mark.
+    if not 0 <= exam <= 100:
+        print("Error: Exam mark must be between 0 and 100.")
+        return
+
+    # Keep a copy of the original record in case saving fails.
+    original_student = student.copy()
+
+    # Update the student's information.
+    student["name"] = new_name
+    student["coursework"] = new_coursework
+    student["exam"] = exam
+
+    # Save the updated records.
+    if save_students():
+        print(f"Successfully updated {new_name}.")
+
+    else:
+        # Restore the original information if saving failed.
+        student_list[student_list.index(student)] = original_student
+        print("Student was not updated because saving failed.")
+
+# ==============================================================
+#   TEST UPDATE STUDENT
+# ==============================================================
+
+# Update Jake Hobbs' academic information.
+update_student(8439, "Jake Hobbs", 18, 17, 19, 85)
+
+# Display his updated record.
+view_individual_student(8439)
 
 # ==============================================================
 #   ! APPLICATION SETUP ! 
