@@ -164,24 +164,49 @@ def view_all_students():
         print(f"Class Average: {average_percentage:.2f}%")
         print("-----------------------------------")
 
-# TEMPORARY TEST - Display loaded student information.
-for student in student_list:
+# ==============================================================
+#   STUDENT SEARCH FUNCTIONS
+# ==============================================================
 
+def find_student(student_number):
+    """Search for a student using their student number."""
+
+    for student in student_list:
+
+        # Check whether the current student's number matches.
+        if student["student_number"] == student_number:
+            return student
+
+    # Return None if no matching student was found.
+    return None
+
+def view_individual_student(student_number):
+    """Find and display an individual student's results."""
+
+    student = find_student(student_number)
+
+    # Check whether a matching student was found.
+    if student is None:
+        print("No student found with that student number.")
+        return
+
+    # Calculate the student's results.
     coursework = calculate_coursework(student)
     percentage = calculate_percentage(student)
     grade = calculate_grade(percentage)
 
-    print(
-        f"{student['name']} | "
-        f"Coursework: {coursework}/60 | "
-        f"Exam: {student['exam']}/100 | "
-        f"Percentage: {percentage:.2f}% | "
-        f"Grade: {grade}"
-    )
-    
-# TEMPORARY TEST - Display loaded student information.
-for student in student_list:
-    print(student)
+    print("-----------------------------------")
+    print("INDIVIDUAL STUDENT RECORD")
+    print(f"Student Name: {student['name']}")
+    print(f"Student Number: {student['student_number']}")
+    print(f"Coursework: {coursework}/60")
+    print(f"Exam Mark: {student['exam']}/100")
+    print(f"Overall Percentage: {percentage:.2f}%")
+    print(f"Grade: {grade}")
+    print("-----------------------------------")
+
+# TEMPORARY TEST - Find an individual student.
+view_individual_student(1345)
 
 # ==============================================================
 #   ! APPLICATION SETUP ! 
