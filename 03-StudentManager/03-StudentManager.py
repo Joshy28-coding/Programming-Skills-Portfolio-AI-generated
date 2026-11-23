@@ -96,6 +96,39 @@ def load_students():
 
     return students
 
+def calculate_coursework(student):
+    """Calculate the combined coursework mark."""
+
+    return sum(student["coursework"])
+
+def calculate_percentage(student):
+    """Calculate the student's overall percentage."""
+
+    coursework_total = calculate_coursework(student)
+
+    overall_total = coursework_total + student["exam"]
+
+    percentage = (overall_total / 160) * 100
+
+    return percentage
+
+def calculate_grade(percentage):
+    """Determine the student's grade based on their percentage."""
+
+    if percentage >= 70:
+        return "A"
+
+    elif percentage >= 60:
+        return "B"
+
+    elif percentage >= 50:
+        return "C"
+
+    elif percentage >= 40:
+        return "D"
+
+    else:
+        return "F"
 
 # Load student records into the program.
 student_list = load_students()
