@@ -1,5 +1,6 @@
 from tkinter import *
 from pathlib import Path
+from PIL import Image, ImageTk
 import random
 
 # ==============================================================
@@ -18,19 +19,21 @@ COLORS = {
 }
 
 FONTS = {
-    "title": ("Helvetica", 22),
-    "heading": ("Helvetica", 18),
-    "body": ("Helvetica", 14),
-    "body_bold": ("Helvetica", 14, "bold"),
+    "title": ("Helvetica", 20),
+    "heading": ("Helvetica", 14),
+    "body": ("Helvetica", 12),
+    "body_bold": ("Helvetica", 12, "bold"),
 }
 
-WINDOW_SIZE = "800x800"
+WINDOW_SIZE = "800x850"
 
 # Get the directory where this Python file is located.
 BASE_DIR = Path(__file__).resolve().parent
 
 # Locate the resources folder and its text file.
 JOKE_FILE = BASE_DIR / "resources" / "randomJokes.txt"
+# Locate the Alexa logo inside the resources folder.
+LOGO_FILE = BASE_DIR / "resources" / "alexa_logo.png"
 
 print("Testing GitHub Alignment.")
 # Second test in aligning Cloned repository with Github
@@ -143,8 +146,6 @@ def show_punchline():
     punchline_label.config(text=current_joke["punchline"])
     status_label.config(text="Hope you enjoyed that!")
 
-    tell_joke()
-
 # ==============================================================
 #   ! APPLICATION SETUP ! 
 # ==============================================================
@@ -188,6 +189,22 @@ card_frame.pack(
 # =============================================================
 # ! HEADER SECTION !
 # =============================================================
+# Load the Alexa logo using Pillow.
+logo = Image.open(LOGO_FILE).convert("RGBA")
+
+# Resize the logo while maintaining its original proportions.
+logo.thumbnail((120, 120), Image.Resampling.LANCZOS)
+
+# Convert the Pillow image into a format Tkinter can display.
+logo_image = ImageTk.PhotoImage(logo)
+
+# Create a label to display the logo.
+logo_label = Label(
+    card_frame,
+    image=logo_image,
+    bg=COLORS["bg_card"]
+)
+logo_label.pack(pady=(5, 10))
 
 title_label = Label(
     card_frame,
