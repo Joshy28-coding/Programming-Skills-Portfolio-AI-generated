@@ -114,7 +114,7 @@ def tell_joke():
     available_jokes = [
         joke for joke in joke_list
         if joke != current_joke
-    ]
+    ] or joke_list
 
     current_joke = random.choice(available_jokes)
 
@@ -192,16 +192,16 @@ title_label = Label(
     text="ALEXA",
     font=FONTS["title"],
     fg= COLORS["fg_text"],
-    bg=["bg_card"]
+    bg=COLORS["bg_card"]
 )
-title_label.pack(pady(15, 5))
+title_label.pack(pady=(15, 5))
 
 status_label = Label(
     card_frame,
     text="Hello! I'm ready to tell you a very silly joke, listen in?",
     font=FONTS["body"],
     fg=COLORS["fg_muted"],
-    bg=["bg_card"]
+    bg=COLORS["bg_card"]
 )
 status_label.pack(pady=(0, 30))
 
@@ -260,14 +260,14 @@ button_frame.pack(fill="x", pady=25)
 # The Main silly joke button
 joke_button = Button(
     button_frame,
-    text="Alexa tell me a joke!",
-    font=FONTS["body_bold"],
+    text="Alexa tell me a Joke!",
+    font=FONTS["title"],
     fg=COLORS["fg_text"],
     bg="#2563EB",
     activebackground="#1D4ED8",
-    activeforeground=COLORS[fg_text],
+    activeforeground=COLORS["fg_text"],
     command=tell_joke,
-    crusor="hand2",
+    cursor="hand2",
     relief="flat",
     padx=20,
     pady=12
