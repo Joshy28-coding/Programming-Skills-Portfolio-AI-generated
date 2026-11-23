@@ -241,10 +241,56 @@ def show_lowest_student():
         "LOWEST OVERALL STUDENT"
     )
 
-# TEMPORARY TEST - Highest and lowest student scores.
-show_highest_student()
+# ==============================================================
+#   STUDENT SORTING FUNCTIONS
+# ==============================================================
 
-show_lowest_student()
+def sort_students(ascending=True):
+    """Sort student records by overall percentage."""
+
+    if not student_list:
+        print("There are no student records available.")
+        return
+
+    # Sort students according to their overall percentage.
+    sorted_students = sorted(
+        student_list,
+        key=calculate_percentage,
+        reverse=not ascending
+    )
+
+    # Display the sorted student records.
+    print("-----------------------------------")
+
+    if ascending:
+        print("STUDENTS SORTED: LOWEST TO HIGHEST")
+    else:
+        print("STUDENTS SORTED: HIGHEST TO LOWEST")
+
+    print("-----------------------------------")
+
+    total_percentage = 0
+
+    for student in sorted_students:
+
+        display_student_record(student)
+
+        total_percentage += calculate_percentage(student)
+
+    # Display the class summary.
+    average_percentage = total_percentage / len(sorted_students)
+
+    print("CLASS SUMMARY")
+    print(f"Number of Students: {len(sorted_students)}")
+    print(f"Class Average: {average_percentage:.2f}%")
+    print("-----------------------------------")
+
+
+# TEMPORARY TEST - Sort student records.
+
+sort_students(ascending=True)
+
+sort_students(ascending=False)
 
 # ==============================================================
 #   ! APPLICATION SETUP ! 
