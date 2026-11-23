@@ -18,10 +18,10 @@ COLORS = {
 }
 
 FONTS = {
-    "title": ("Helvetica", 16),
-    "heading": ("Helvetica", 14),
-    "body": ("Helvetica", 12),
-    "body_bold": ("Helvetica", 12, "bold"),
+    "title": ("Helvetica", 22),
+    "heading": ("Helvetica", 18),
+    "body": ("Helvetica", 14),
+    "body_bold": ("Helvetica", 14, "bold"),
 }
 
 WINDOW_SIZE = "800x800"
@@ -116,13 +116,19 @@ def tell_joke():
         if joke != current_joke
     ] or joke_list
 
+    # Selecting the joke
     current_joke = random.choice(available_jokes)
+
+    # Change the button text after the first joke.
+    joke_button.config(text="Next joke!")
 
     # Display the joke setup.
     setup_label.config(text=current_joke["setup"])
 
     # Keep the punchline hidden until requested.
     punchline_label.config(text="")
+    # Change the state to active so the button changes from "Alexa, tell me a joke!" to "Next joke!"
+    punchline_button.config(state="normal")
 
     status_label.config(text="I've got a joke for you!")
 
@@ -136,10 +142,6 @@ def show_punchline():
 
     punchline_label.config(text=current_joke["punchline"])
     status_label.config(text="Hope you enjoyed that!")
-
-
-def next_joke():
-    """Load another joke."""
 
     tell_joke()
 
@@ -260,8 +262,8 @@ button_frame.pack(fill="x", pady=25)
 # The Main silly joke button
 joke_button = Button(
     button_frame,
-    text="Alexa tell me a Joke!",
-    font=FONTS["title"],
+    text="Alexa, tell me a Joke!",
+    font=FONTS["heading"],
     fg=COLORS["fg_text"],
     bg="#2563EB",
     activebackground="#1D4ED8",
@@ -289,33 +291,13 @@ punchline_button = Button(
     command=show_punchline,
     cursor="hand2",
     relief="flat",
-    pady=10
+    pady=10,
+    state="disabled"
 )
 punchline_button.pack(
     fill="x",
     pady=5
 )
-
-
-# Next joke button
-next_button = Button(
-    button_frame,
-    text="Next Joke",
-    font=FONTS["body"],
-    fg=COLORS["fg_text"],
-    bg=COLORS["bg_card_inner"],
-    activebackground="#374151",
-    activeforeground=COLORS["fg_text"],
-    command=next_joke,
-    cursor="hand2",
-    relief="flat",
-    pady=10
-)
-next_button.pack(
-    fill="x",
-    pady=5
-)
-
 
 # Quit button
 quit_button = Button(
