@@ -666,10 +666,114 @@ create_menu_button(
     lambda: show_placeholder("DASHBOARD")
 )
 
+# ==============================================================
+#   VIEW ALL STUDENTS - GUI
+# ==============================================================
+
+def view_all_students_gui():
+    """Display all student records inside the GUI."""
+
+    clear_results()
+
+    # Display the section heading.
+    results_text.insert(
+        END,
+        "ALL STUDENT RECORDS\n",
+        "title"
+    )
+
+    results_text.insert(
+        END,
+        "=" * 75 + "\n\n",
+        "muted"
+    )
+
+    total_percentage = 0
+
+    # Check whether there are any students.
+    if not student_list:
+        results_text.insert(
+            END,
+            "No student records are currently available.\n",
+            "normal"
+        )
+
+        finish_results()
+        return
+
+    # Display every student.
+    for student in student_list:
+
+        coursework = calculate_coursework(student)
+        percentage = calculate_percentage(student)
+        grade = calculate_grade(percentage)
+
+        results_text.insert(
+            END,
+            f"Student Name: {student['name']}\n",
+            "heading"
+        )
+
+        results_text.insert(
+            END,
+            f"Student Number: {student['student_number']}\n"
+        )
+
+        results_text.insert(
+            END,
+            f"Coursework: {coursework}/60\n"
+        )
+
+        results_text.insert(
+            END,
+            f"Exam Mark: {student['exam']}/100\n"
+        )
+
+        results_text.insert(
+            END,
+            f"Overall Percentage: {percentage:.2f}%\n"
+        )
+
+        results_text.insert(
+            END,
+            f"Grade: {grade}\n"
+        )
+
+        results_text.insert(
+            END,
+            "-" * 75 + "\n\n",
+            "muted"
+        )
+
+        total_percentage += percentage
+
+    # Calculate the class average.
+    average_percentage = total_percentage / len(student_list)
+
+    # Display the class summary.
+    results_text.insert(
+        END,
+        "CLASS SUMMARY\n",
+        "title"
+    )
+
+    results_text.insert(
+        END,
+        f"Number of Students: {len(student_list)}\n"
+    )
+
+    results_text.insert(
+        END,
+        f"Class Average: {average_percentage:.2f}%\n"
+    )
+
+    finish_results()
+
+
 create_menu_button(
     sidebar,
     "View All Students",
-    lambda: show_placeholder("VIEW ALL STUDENTS")
+    view_all_students_gui
 )
 
 create_menu_button(
@@ -931,6 +1035,27 @@ results_text.tag_configure(
     font=FONTS["body"],
     foreground=COLORS["fg_muted"]
 )
+
+# Why separate these?
+# We'll be displaying different things in the same panel: student lists, individual records, search results, and performance information.
+#Instead of repeating the same clearing and locking instructions everywhere, we can reuse these two functions.
+
+# ==============================================================
+#   RESULTS DISPLAY FUNCTIONS
+# ==============================================================
+
+def clear_results():
+    """Clear the results panel before displaying new information."""
+
+    results_text.config(state=NORMAL)
+    results_text.delete("1.0", END)
+
+
+def finish_results():
+    """Prevent the user from editing the displayed results."""
+
+    results_text.config(state=DISABLED)
+    
 
 # ==============================================================
 #   START APPLICATION
