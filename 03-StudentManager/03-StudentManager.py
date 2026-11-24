@@ -832,6 +832,36 @@ lowest_label = create_summary_card(
 )
 
 # ==============================================================
+#   REFRESH DASHBOARD
+# ==============================================================
+
+def refresh_dashboard():
+    """Update the dashboard statistics."""
+
+    statistics = get_class_statistics()
+
+    student_count_label.config(
+        text=str(statistics["total_students"])
+    )
+
+    average_label.config(
+        text=f"{statistics['average']:.2f}%"
+    )
+
+    if statistics["highest"]:
+        highest_label.config(
+            text=f"{calculate_percentage(statistics['highest']):.2f}%"
+        )
+
+        lowest_label.config(
+            text=f"{calculate_percentage(statistics['lowest']):.2f}%"
+        )
+
+    else:
+        highest_label.config(text="N/A")
+        lowest_label.config(text="N/A")
+
+# ==============================================================
 #   RESULTS PANEL
 # ==============================================================
 
@@ -841,7 +871,7 @@ results_card = Frame(
     padx=20,
     pady=20
 )
-results_card.grid(row=2, column=0, sticky="nsew")
+results_card.grid(row=3, column=0, sticky="nsew")
 
 results_card.grid_columnconfigure(0, weight=1)
 results_card.grid_rowconfigure(1, weight=1)
@@ -879,4 +909,5 @@ results_text.grid(
 #   START APPLICATION
 # ==============================================================
 
+refresh_dashboard()
 root.mainloop()
