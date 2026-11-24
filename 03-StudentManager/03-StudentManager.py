@@ -24,8 +24,6 @@ FONTS = {
     "body_bold": ("Helvetica", 12, "bold"),
 }
 
-WINDOW_SIZE = "800x800"
-
 # Get the directory where this Python file is located.
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -548,7 +546,7 @@ def get_class_statistics():
 
 root = Tk()
 root.title("Student Manager")
-root.geometry("1100x760")
+root.geometry("1100x900")
 root.config(bg=COLORS["bg_color"])
 root.minsize(900, 650)
 
@@ -769,6 +767,31 @@ def view_all_students_gui():
 
     finish_results()
 
+# ==============================================================
+#   FIND STUDENT - GUI
+# ==============================================================
+
+def show_find_student():
+    """Display the student search interface."""
+
+    clear_results()
+
+    results_text.insert(
+        END,
+        "FIND INDIVIDUAL STUDENT\n\n",
+        "title"
+    )
+
+    results_text.insert(
+        END,
+        "Enter a student number below to find their academic record.\n",
+        "muted"
+    )
+
+    finish_results()
+
+    # Clear any previous search input.
+    search_entry.delete(0, END)
 
 create_menu_button(
     sidebar,
@@ -988,6 +1011,42 @@ create_label(
     COLORS["bg_card"]
 ).grid(row=0, column=0, sticky="w", pady=(0, 15))
 
+# ==============================================================
+#   SEARCH INPUT AREA
+# ==============================================================
+
+search_frame = Frame(
+    results_card,
+    bg=COLORS["bg_card"]
+)
+
+search_frame.grid(
+    row=1,
+    column=0,
+    sticky="ew",
+    pady=(0, 15)
+)
+
+create_label(
+    search_frame,
+    "Student Number",
+    FONTS["body_bold"],
+    COLORS["fg_text"],
+    COLORS["bg_card"]
+).pack(side=LEFT, padx=(0, 10))
+
+
+search_entry = Entry(
+    search_frame,
+    font=FONTS["body"],
+    fg=COLORS["fg_text"],
+    bg=COLORS["bg_entry"],
+    insertbackground=COLORS["fg_text"],
+    relief=FLAT,
+    width=20
+)
+
+search_entry.pack(side=LEFT, ipady=7, padx=5)
 
 results_text = Text(
     results_card,
