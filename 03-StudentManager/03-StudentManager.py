@@ -904,6 +904,33 @@ results_text.grid(
     sticky="nsew"
 )
 
+# ==============================================================
+#   RESULTS TEXT FORMATTING
+# ==============================================================
+
+results_text.tag_configure(
+    "title",
+    font=FONTS["heading"],
+    foreground=COLORS["fg_text"]
+)
+
+results_text.tag_configure(
+    "heading",
+    font=FONTS["body_bold"],
+    foreground=COLORS["fg_text"]
+)
+
+results_text.tag_configure(
+    "normal",
+    font=FONTS["body"],
+    foreground=COLORS["fg_text"]
+)
+
+results_text.tag_configure(
+    "muted",
+    font=FONTS["body"],
+    foreground=COLORS["fg_muted"]
+)
 
 # ==============================================================
 #   START APPLICATION
