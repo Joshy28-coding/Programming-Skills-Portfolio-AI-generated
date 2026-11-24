@@ -1001,7 +1001,7 @@ results_card = Frame(
 results_card.grid(row=3, column=0, sticky="nsew")
 
 results_card.grid_columnconfigure(0, weight=1)
-results_card.grid_rowconfigure(1, weight=1)
+results_card.grid_rowconfigure(2, weight=1)
 
 create_label(
     results_card,
@@ -1062,11 +1062,104 @@ results_text = Text(
 )
 
 results_text.grid(
-    row=1,
+    row=2,
     column=0,
     sticky="nsew"
 )
 
+def search_student_gui():
+    """Search for a student and display their academic record."""
+
+    student_number = search_entry.get().strip()
+
+    # Check that the input is not empty.
+    if not student_number:
+        clear_results()
+        results_text.insert(
+            END,
+            "Please enter a student number.\n",
+            "normal"
+        )
+        finish_results()
+        return
+
+    # Check that the input contains only numbers.
+    if not student_number.isdigit():
+        clear_results()
+        results_text.insert(
+            END,
+            "Invalid input. Please enter a numerical student number.\n",
+            "normal"
+        )
+        finish_results()
+        return
+
+    # Search for the student.
+    student = find_student(int(student_number))
+
+    clear_results()
+
+    if student is None:
+        results_text.insert(
+            END,
+            "STUDENT NOT FOUND\n\n",
+            "title"
+        )
+
+        results_text.insert(
+            END,
+            f"No student exists with number {student_number}.",
+            "normal"
+        )
+
+    else:
+        display_student_record_gui(student)
+
+    finish_results()
+    
+def display_student_record_gui(student):
+    """Display an individual student's academic record."""
+
+    coursework = calculate_coursework(student)
+    percentage = calculate_percentage(student)
+    grade = calculate_grade(percentage)
+
+    results_text.insert(
+        END,
+        "STUDENT RECORD\n\n",
+        "title"
+    )
+
+    results_text.insert(
+        END,
+        f"Student Name: {student['name']}\n",
+        "heading"
+    )
+
+    results_text.insert(
+        END,
+        f"Student Number: {student['student_number']}\n"
+    )
+
+    results_text.insert(
+        END,
+        f"Coursework: {coursework}/60\n"
+    )
+
+    results_text.insert(
+        END,
+        f"Exam Mark: {student['exam']}/100\n"
+    )
+
+    results_text.insert(
+        END,
+        f"Overall Percentage: {percentage:.2f}%\n"
+    )
+
+    results_text.insert(
+        END,
+        f"Grade: {grade}\n"
+    )
 # ==============================================================
 #   RESULTS TEXT FORMATTING
 # ==============================================================
