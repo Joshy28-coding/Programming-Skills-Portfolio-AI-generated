@@ -736,7 +736,7 @@ main_content = Frame(
 main_content.grid(row=1, column=1, sticky="nsew", padx=25, pady=25)
 
 main_content.grid_columnconfigure(0, weight=1)
-main_content.grid_rowconfigure(2, weight=1)
+main_content.grid_rowconfigure(3, weight=1)
 
 
 # Dashboard heading.
@@ -756,6 +756,80 @@ create_label(
     COLORS["bg_color"]
 ).grid(row=1, column=0, sticky="w", pady=(5, 20))
 
+# ==============================================================
+#   DASHBOARD SUMMARY CARDS
+# ==============================================================
+
+summary_frame = Frame(
+    main_content,
+    bg=COLORS["bg_color"]
+)
+
+summary_frame.grid(
+    row=2,
+    column=0,
+    sticky="ew",
+    pady=(0, 20)
+)
+
+# Give each card equal horizontal space.
+for column in range(4):
+    summary_frame.grid_columnconfigure(column, weight=1)
+
+def create_summary_card(parent, title, value, column):
+    """Create a reusable dashboard statistics card."""
+
+    card = Frame(
+        parent,
+        bg=COLORS["bg_card"],
+        padx=15,
+        pady=15
+    )
+
+    card.grid(
+        row=0,
+        column=column,
+        sticky="ew",
+        padx=5
+    )
+
+    create_label(
+        card,
+        title,
+        FONTS["body"],
+        COLORS["fg_muted"],
+        COLORS["bg_card"]
+    ).pack(anchor="w")
+
+    value_label = create_label(
+        card,
+        value,
+        FONTS["title"],
+        COLORS["fg_text"],
+        COLORS["bg_card"]
+    )
+
+    value_label.pack(anchor="w", pady=(8, 0))
+
+    return value_label
+
+
+# Create four cards that display metrics
+student_count_label = create_summary_card(
+    summary_frame, "TOTAL STUDENTS", "0", 0
+)
+
+average_label = create_summary_card(
+    summary_frame, "CLASS AVERAGE", "0%", 1
+)
+
+highest_label = create_summary_card(
+    summary_frame, "HIGHEST SCORE", "0%", 2
+)
+
+lowest_label = create_summary_card(
+    summary_frame, "LOWEST SCORE", "0%", 3
+)
 
 # ==============================================================
 #   RESULTS PANEL
