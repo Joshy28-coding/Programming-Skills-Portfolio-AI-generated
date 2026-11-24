@@ -802,9 +802,8 @@ create_menu_button(
 create_menu_button(
     sidebar,
     "Find Student",
-    lambda: show_placeholder("FIND STUDENT")
+    show_find_student
 )
-
 create_label(
     sidebar,
     "STUDENT MANAGEMENT",
@@ -1047,6 +1046,23 @@ search_entry = Entry(
 )
 
 search_entry.pack(side=LEFT, ipady=7, padx=5)
+
+search_button = Button(
+    search_frame,
+    text="Search",
+    font=FONTS["body_bold"],
+    fg=COLORS["fg_text"],
+    bg=COLORS["bg_card_inner"],
+    activebackground=COLORS["bg_card"],
+    activeforeground=COLORS["fg_text"],
+    relief=FLAT,
+    padx=15,
+    pady=7,
+    cursor="hand2",
+    command=search_student_gui
+)
+
+search_button.pack(side=LEFT, padx=10)  
 
 results_text = Text(
     results_card,
