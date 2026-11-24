@@ -1010,6 +1010,56 @@ create_label(
     COLORS["bg_card"]
 ).grid(row=0, column=0, sticky="w", pady=(0, 15))
 
+def search_student_gui():
+    """Search for a student and display their academic record."""
+
+    student_number = search_entry.get().strip()
+
+    # Check that the input is not empty.
+    if not student_number:
+        clear_results()
+        results_text.insert(
+            END,
+            "Please enter a student number.\n",
+            "normal"
+        )
+        finish_results()
+        return
+
+    # Check that the input contains only numbers.
+    if not student_number.isdigit():
+        clear_results()
+        results_text.insert(
+            END,
+            "Invalid input. Please enter a numerical student number.\n",
+            "normal"
+        )
+        finish_results()
+        return
+
+    # Search for the student.
+    student = find_student(int(student_number))
+
+    clear_results()
+
+    if student is None:
+        results_text.insert(
+            END,
+            "STUDENT NOT FOUND\n\n",
+            "title"
+        )
+
+        results_text.insert(
+            END,
+            f"No student exists with number {student_number}.",
+            "normal"
+        )
+
+    else:
+        display_student_record_gui(student)
+
+    finish_results()
+
 # ==============================================================
 #   SEARCH INPUT AREA
 # ==============================================================
@@ -1082,56 +1132,6 @@ results_text.grid(
     column=0,
     sticky="nsew"
 )
-
-def search_student_gui():
-    """Search for a student and display their academic record."""
-
-    student_number = search_entry.get().strip()
-
-    # Check that the input is not empty.
-    if not student_number:
-        clear_results()
-        results_text.insert(
-            END,
-            "Please enter a student number.\n",
-            "normal"
-        )
-        finish_results()
-        return
-
-    # Check that the input contains only numbers.
-    if not student_number.isdigit():
-        clear_results()
-        results_text.insert(
-            END,
-            "Invalid input. Please enter a numerical student number.\n",
-            "normal"
-        )
-        finish_results()
-        return
-
-    # Search for the student.
-    student = find_student(int(student_number))
-
-    clear_results()
-
-    if student is None:
-        results_text.insert(
-            END,
-            "STUDENT NOT FOUND\n\n",
-            "title"
-        )
-
-        results_text.insert(
-            END,
-            f"No student exists with number {student_number}.",
-            "normal"
-        )
-
-    else:
-        display_student_record_gui(student)
-
-    finish_results()
     
 def display_student_record_gui(student):
     """Display an individual student's academic record."""
