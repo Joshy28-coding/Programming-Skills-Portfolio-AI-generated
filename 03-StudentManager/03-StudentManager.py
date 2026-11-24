@@ -133,6 +133,7 @@ def calculate_grade(percentage):
 # Load student records into the program.
 student_list = load_students()
 
+# I Prompted ChatGPT for this function
 def view_all_students():
     """Display all student records and the class average."""
 
@@ -387,6 +388,7 @@ def add_student(student_number, name, coursework1, coursework2,
 # ==============================================================
 #   DELETE STUDENT FUNCTION
 # ==============================================================
+# Allows user to delete selected student records.
 
 def delete_student(student_number=None, name=None):
     """Delete a student using their number or name."""
@@ -506,6 +508,39 @@ def update_student(student_number, new_name, coursework1, coursework2,
         student_list[student_list.index(student)] = original_student
         print("Student was not updated because saving failed.")
 
+# ==============================================================
+#   DASHBOARD STATISTICS
+# ==============================================================
+
+def get_class_statistics():
+    """Calculate the main student performance statistics."""
+
+    if not student_list:
+        return {
+            "total_students": 0,
+            "average": 0,
+            "highest": None,
+            "lowest": None
+        }
+
+    # Calculate the average percentage.
+    total_percentage = sum(
+        calculate_percentage(student)
+        for student in student_list
+    )
+
+    average = total_percentage / len(student_list)
+
+    # Find the highest and lowest scoring students.
+    highest = max(student_list, key=calculate_percentage)
+    lowest = min(student_list, key=calculate_percentage)
+
+    return {
+        "total_students": len(student_list),
+        "average": average,
+        "highest": highest,
+        "lowest": lowest
+    }
 
 # ==============================================================
 #   ! APPLICATION SETUP !
